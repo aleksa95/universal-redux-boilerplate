@@ -3,6 +3,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
+const CleanPlugin = require('clean-webpack-plugin');
 
 console.log("DEVELOPMENT");
 
@@ -79,6 +80,7 @@ module.exports = {
     extensions: ['', '.json', '.js', '.jsx'],
   },
   plugins: [
+    new CleanPlugin([assetsPath], { root: path.resolve(__dirname, '../') }),
     // hot reload
     new webpack.HotModuleReplacementPlugin(),
     new webpack.IgnorePlugin(/webpack-stats\.json$/),

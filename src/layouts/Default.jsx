@@ -22,7 +22,7 @@ export default class Default extends Component {
               {/* (will be present only in development mode) */}
               {/* can smoothen the initial style flash (flicker) on page load in development mode. */}
               {/* ideally one could also include here the style for the current page (Home.scss, About.scss, etc) */}
-              { Object.keys(assets.styles).length === 0 ? <style dangerouslySetInnerHTML={{__html: require('../containers/home.scss')._style}}/> : null }
+              { Object.keys(assets.styles).length === 0 ? <style dangerouslySetInnerHTML={{__html: require('../containers/index.scss')._style}}/> : null }
           </head>
           <body>
           <div id="root" dangerouslySetInnerHTML={{ __html: content }} />

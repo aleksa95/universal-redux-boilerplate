@@ -3,8 +3,7 @@ import React from 'react';
 
 export default class App extends React.Component {
   render() {
-    // console.log(store)
-    return <div>{this.props.children}</div>;
+    return <div className={require('./../index.scss').app}>{this.props.children}</div>;
   }
 }
 

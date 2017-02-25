@@ -2,6 +2,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const CleanPlugin = require('clean-webpack-plugin');
 
 console.log("PRODUCTION");
 
@@ -75,6 +76,7 @@ module.exports = {
     extensions: ['', '.json', '.js', '.jsx'],
   },
   plugins: [
+    new CleanPlugin([assetsPath], { root: path.resolve(__dirname, '../') }),
     new ExtractTextPlugin('[name]-[chunkhash].css', {allChunks: true}),
 
     new webpack.DefinePlugin({
