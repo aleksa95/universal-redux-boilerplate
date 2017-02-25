@@ -4,45 +4,38 @@ import { createStore as _createStore, applyMiddleware, compose } from 'redux';
 
 function createStoreWithReducer(history, data, reducer) {
   const reduxRouterMiddleware = routerMiddleware(history);
-  const middleware = [
-    reduxRouterMiddleware,
-  ];
+  const middleware = [reduxRouterMiddleware];
 
+  let finalCreateStore;
 
-    let finalCreateStore;
+  if (process.env.NODE_ENV === 'development' && __CLIENT__ && __DEVTOOLS__) {
+    const { persistState } = require('redux-devtools');
+    const DevTools = require('../containers/DevTools');
 
-    if (process.env.NODE_ENV === 'development' && __CLIENT__ && __DEVTOOLS__) {
-        const { persistState } = require('redux-devtools');
-        const DevTools = require('../containers/DevTools');
+    finalCreateStore = compose(
+      applyMiddleware(...middleware),
+      global.devToolsExtension ? global.devToolsExtension() : DevTools.instrument(),
+      persistState(global.location.href.match(/[?&]debug_session=([^&]+)\b/))
+    )(_createStore);
+  } else {
+    finalCreateStore = applyMiddleware(...middleware)(_createStore);
+  }
 
-        finalCreateStore = compose(
-          applyMiddleware(...middleware),
-          global.devToolsExtension ? global.devToolsExtension() : DevTools.instrument(),
-          persistState(global.location.href.match(/[?&]debug_session=([^&]+)\b/))
-        )(_createStore);
+  const store = finalCreateStore(reducer, data);
 
-    } else {
-        finalCreateStore = applyMiddleware(...middleware)(_createStore);
-    }
+  if (process.env.NODE_ENV === 'development' && module.hot) {
+    module.hot.accept('../reducers', () => {
+      store.replaceReducer(require('../reducers/index'));
+    });
+  }
 
-
-
-    const store = finalCreateStore(reducer, data);
-
-
-    if (process.env.NODE_ENV === 'development' && module.hot) {
-        module.hot.accept('../reducers', () => {
-          store.replaceReducer(require('../reducers/index'));
-        });
-    }
-
-    return store;
+  return store;
 }
 
 function createStore(history, data) {
-    return createStoreWithReducer(history, data, require('../reducers'));
+  return createStoreWithReducer(history, data, require('../reducers'));
 }
 
 module.exports = {
-    createStore,
+  createStore,
 };

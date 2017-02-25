@@ -6,25 +6,16 @@ import path from 'path';
 import PrettyError from 'pretty-error';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import { match, RouterContext } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
+import {match, RouterContext} from 'react-router';
+import {syncHistoryWithStore} from 'react-router-redux';
 import createHistory from 'react-router/lib/createMemoryHistory';
-import { Provider } from 'react-redux';
-import { createStore } from '../src/redux/createStore';
+import {Provider} from 'react-redux';
+import {createStore} from '../src/redux/createStore';
 import getRoutes from '../src/routes';
 import Default from '../src/layouts/Default';
-import { port, apiHost, apiPort } from '../config/env';
+import {port, apiHost, apiPort} from '../config/env';
 
 global.__CLIENT__ = false; // eslint-disable-line
-
-
-// WEBPACK IMAGE LOADING
-// const rootDir = path.resolve(__dirname, '..');
-// const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
-// global.webpackIsomorphicTools = new WebpackIsomorphicTools(require('../config/webpack-isomorphic-tools-config'))
-//     .server(rootDir, function() {
-//         require('./_server');
-//     });
 
 const targetUrl = `http://${apiHost}:${apiPort}`;
 const pretty = new PrettyError();
@@ -38,7 +29,7 @@ const proxy = httpProxy.createProxyServer({
 app.use('/', express.static(path.resolve(__dirname, '../public')));
 
 app.use('/api', (req, res) => {
-  proxy.web(req, res, { target: `${targetUrl}/api` });
+  proxy.web(req, res, {target: `${targetUrl}/api`});
 });
 
 server.on('upgrade', (req, socket, head) => {
@@ -46,14 +37,14 @@ server.on('upgrade', (req, socket, head) => {
 });
 
 proxy.on('error', (error, req, res) => {
-  	if (error.code !== 'ECONNRESET') {
-    	console.error('proxy error', error);
-    }
-	if (!res.headersSent) {
-    	res.writeHead(500, { 'content-type': 'application/json' });
-    }
-	const json = { error: 'proxy_error', reason: error.message };
-	res.end(JSON.stringify(json));
+  if (error.code !== 'ECONNRESET') {
+    console.error('proxy error', error);
+  }
+  if (!res.headersSent) {
+    res.writeHead(500, {'content-type': 'application/json'});
+  }
+  const json = {error: 'proxy_error', reason: error.message};
+  res.end(JSON.stringify(json));
 });
 
 app.use((req, res) => {
@@ -66,10 +57,11 @@ app.use((req, res) => {
   const history = syncHistoryWithStore(memoryHistory, store);
 
   function hydrateOnClient() {
-    res.send(`<!doctype html>${ReactDOM.renderToString(<Default assets={webpackIsomorphicTools.assets()} store={store} />)}`);
+    res.send(`<!doctype html>${ReactDOM.renderToString(<Default assets={webpackIsomorphicTools.assets()}
+                                                                store={store}/>)}`);
   }
 
-  match({ history, routes: getRoutes(store), location: req.originalUrl }, (error, redirectLocation, renderProps) => {
+  match({history, routes: getRoutes(store), location: req.originalUrl}, (error, redirectLocation, renderProps) => {
     if (redirectLocation) {
       res.redirect(redirectLocation.pathname + redirectLocation.search);
     } else if (error) {
@@ -83,8 +75,9 @@ app.use((req, res) => {
         </Provider>
       );
       res.status(200);
-      global.navigator = { userAgent: req.headers['user-agent'] };
-      res.send(`<!doctype html>${ReactDOM.renderToStaticMarkup(<Default assets={webpackIsomorphicTools.assets()} component={component} store={store} />)}`);
+      global.navigator = {userAgent: req.headers['user-agent']};
+      res.send(`<!doctype html>${ReactDOM.renderToStaticMarkup(<Default assets={webpackIsomorphicTools.assets()}
+                                                                        component={component} store={store}/>)}`);
 
     } else {
       res.status(404).send('Not found');

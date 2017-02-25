@@ -3,7 +3,7 @@
 const path = require('path');
 const webpack = require('webpack');
 
-console.log("PRODUCTION PRODUCTION PRODUCTION PRODUCTION PRODUCTION PRODUCTION");
+console.log("PRODUCTION");
 
 const assetsPath = path.resolve(__dirname, '../public/assets');
 

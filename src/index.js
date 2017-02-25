@@ -21,15 +21,14 @@ ReactDOM.render(
   <Provider store={store} key="provider">
     {component}
   </Provider>,
-  dest
+  dest,
 );
 
 if (process.env.NODE_ENV !== 'production') {
   global.React = React; // enable debugger
-  //   console.log('DEST', dest.firstChild.attributes)
-  //   if (!dest || !dest.firstChild || !dest.firstChild.attributes || !dest.firstChild.attributes['data-react-checksum']) {
-  //   console.error('Server-side React render was discarded. Make sure that your initial render does not contain any client-side code.');
-  // }
+  if (!dest || !dest.firstChild || !dest.firstChild.attributes || !dest.firstChild.attributes['data-react-checksum']) {
+    console.error('Server-side React render was discarded. Make sure that your initial render does not contain any client-side code.');
+  }
 }
 
 if (__DEVTOOLS__ && !global.devToolsExtension) {
@@ -41,7 +40,7 @@ if (__DEVTOOLS__ && !global.devToolsExtension) {
         <DevTools />
       </div>
     </Provider>,
-    dest
+    dest,
   );
 }
 
