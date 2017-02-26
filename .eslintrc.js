@@ -16,7 +16,8 @@ module.exports = { "extends": "eslint-config-airbnb",
     "comma-dangle": 0,  // not sure why airbnb turned this on. gross!
     "indent": [2, 2, {"SwitchCase": 1}],
     "no-console": 0,
-    "no-alert": 0
+    "no-alert": 0,
+    "no-new": 0,
   },
   "plugins": [
     "react", "import"

@@ -28,10 +28,6 @@ const proxy = httpProxy.createProxyServer({
 
 app.use('/', express.static(path.resolve(__dirname, '../public')));
 
-app.use('/api', (req, res) => {
-  proxy.web(req, res, {target: `${targetUrl}/api`});
-});
-
 server.on('upgrade', (req, socket, head) => {
   proxy.ws(req, socket, head);
 });
