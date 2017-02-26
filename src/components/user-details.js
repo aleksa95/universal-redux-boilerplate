@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash/fp';
 
 /*
  * We need "if(!this.props.user)" because we set state to null by default
@@ -7,7 +8,7 @@ import { connect } from 'react-redux';
 
 class UserDetail extends Component {
   render() {
-    if (!this.props.user) {
+    if (isEmpty(this.props.user)) {
       return (<div>Select a user...</div>);
     }
     return (
@@ -30,7 +31,6 @@ function mapStateToProps(state) {
 
 UserDetail.propTypes = {
   user: React.PropTypes.oneOfType([
-    React.PropTypes.bool.isRequired,
     React.PropTypes.object.isRequired
   ]),
 };

@@ -1,4 +1,34 @@
 .app {
+  @import "Header/header";
+
   @import "Homepage/homepage";
   @import "NotFound/notFound";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-size: 1.4rem;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+
+  &:focus, &:hover, &:link {
+    text-decoration: none;
+  }
 }

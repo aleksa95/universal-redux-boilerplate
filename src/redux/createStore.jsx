@@ -25,7 +25,8 @@ function createStoreWithReducer(history, data, reducer) {
 
   if (process.env.NODE_ENV === 'development' && module.hot) {
     module.hot.accept('../reducers', () => {
-      store.replaceReducer(require('../reducers/index'));
+      const nextRootReducer = require('../reducers/index');
+      store.replaceReducer(nextRootReducer);
     });
   }
 

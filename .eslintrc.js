@@ -36,4 +36,4 @@ module.exports = { "extends": "eslint-config-airbnb",
     "socket": true,
     "webpackIsomorphicTools": true
   }
-}
+};

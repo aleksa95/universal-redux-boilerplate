@@ -1,4 +1,5 @@
 {
+  "plugins": ["lodash"],
   "presets": [
     "latest",
     "stage-0",

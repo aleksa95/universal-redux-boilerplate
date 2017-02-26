@@ -36,7 +36,7 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loaders: ['babel', 'eslint-loader']
+        loaders: ['babel-loader?plugins=lodash', 'eslint-loader'],
       },
       {
         test: /\.scss$/,
