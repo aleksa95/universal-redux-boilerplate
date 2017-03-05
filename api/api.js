@@ -4,11 +4,15 @@ import logger from 'morgan';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import { apiPort, database } from '../config/env';
-const router = require('./router/router');
+import router from './router/router';
+import passport from 'passport';
+import passportConfig from '../config/passport';
 
 const app = express();
 
 app.use(logger('dev'));
+
+app.use(passport.initialize());
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

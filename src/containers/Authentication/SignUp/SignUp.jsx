@@ -1,29 +1,27 @@
 import React from 'react';
-import { SubmissionError } from 'redux-form';
+import { connect } from 'react-redux';
 import SignUpForm from '../../../components/loginForm';
+import { registerUser } from '../../../actions/auth-actions';
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-export default class SignUp extends React.Component {
+class SignUp extends React.Component {
   submit(values) {
-    return sleep(1000) // simulate server latency
-      .then(() => {
-        if (![ 'john', 'paul', 'george', 'ringo@ringo.rs' ].includes(values.email)) {
-          throw new SubmissionError({ email: 'EMAIL BAD', _error: 'Login failed!' });
-        } else if (values.password !== 'redux-form') {
-          throw new SubmissionError({ password: 'Wrong password', _error: 'Login failed!' });
-        } else {
-          window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
-        }
-      });
+    return this.props.registerUser(values);
   }
 
   render() {
+    const styles = require('../_authentication.scss');
+
     return (
-      <div>
-        Sign Up Page
-        <SignUpForm onSubmit={this.submit} />
+      <div className={styles['authentication-wrapper']}>
+        <div className={styles['authentication-title']}>Sign Up Page</div>
+        <SignUpForm onSubmit={this.submit.bind(this)} />
       </div>
     );
   }
 }
+
+SignUp.propTypes = {
+  registerUser: React.PropTypes.func,
+};
+
+export default connect(null, { registerUser })(SignUp);

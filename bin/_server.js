@@ -11,6 +11,7 @@ import {syncHistoryWithStore} from 'react-router-redux';
 import createHistory from 'react-router/lib/createMemoryHistory';
 import {Provider} from 'react-redux';
 import {createStore} from '../src/redux/createStore';
+import cookieParser from 'cookie-parser';
 import getRoutes from '../src/routes';
 import Default from '../src/layouts/Default';
 import {port, apiHost, apiPort} from '../config/env';
@@ -27,6 +28,8 @@ const proxy = httpProxy.createProxyServer({
 });
 
 app.use('/', express.static(path.resolve(__dirname, '../public')));
+
+app.use(cookieParser());
 
 server.on('upgrade', (req, socket, head) => {
   proxy.ws(req, socket, head);
@@ -47,7 +50,6 @@ app.use((req, res) => {
   if (process.env.NODE_ENV === 'development') {
     webpackIsomorphicTools.refresh();
   }
-
   const memoryHistory = createHistory(req.originalUrl);
   const store = createStore(memoryHistory);
   const history = syncHistoryWithStore(memoryHistory, store);

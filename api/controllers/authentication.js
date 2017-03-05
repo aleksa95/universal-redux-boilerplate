@@ -1,72 +1,56 @@
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
 import User from '../models/user';
 import config from '../../config/env';
+import passport from 'passport';
 
 function generateToken(user) {
-  return jwt.sign(user, config.secret, {
-    expiresIn: 10080 // in seconds
-  });
+  return jwt.sign(user, config.secret);
 }
 
-// Set user info from request
 function setUserInfo(request) {
   return {
     _id: request._id,
-    firstName: request.profile.firstName,
-    lastName: request.profile.lastName,
     email: request.email,
     role: request.role,
   };
 }
 
-//========================================
-// Login Route
-//========================================
 exports.login = function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) return next(err);
+    if (!user) {
+      return res.json(403, info);
+    }
 
-  let userInfo = setUserInfo(req.user);
+    let userInfo = setUserInfo(res);
+    res.status(200).json({
+      token: 'JWT ' + generateToken(userInfo),
+      user: userInfo
+    });
 
-  res.status(200).json({
-    token: 'JWT ' + generateToken(userInfo),
-    user: userInfo
-  });
+  })(req, res, next);
 };
 
-//========================================
-// Registration Route
-//========================================
+
 exports.register = function(req, res, next) {
-  // Check for registration errors
   const email = req.body.email;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
   const password = req.body.password;
 
-  // Return error if no email provided
   if (!email) {
-    return res.status(422).send({ error: 'You must enter an email address.'});
+    return res.status(422).send({ error: 'You must enter an email address.', type: 'email'});
   }
 
-  // Return error if full name not provided
-  if (!firstName || !lastName) {
-    return res.status(422).send({ error: 'You must enter your full name.'});
-  }
-
-  // Return error if no password provided
   if (!password) {
-    return res.status(422).send({ error: 'You must enter a password.' });
+    return res.status(422).send({ error: 'You must enter a password.', type: 'password' });
   }
 
   User.findOne({ email: email }, function(err, existingUser) {
     if (err) { return next(err); }
 
-    // If user is not unique, return error
     if (existingUser) {
-      return res.status(422).send({ error: 'That email address is already in use.' });
+      return res.status(422).send({ error: 'That email address is already in use.' , type: 'email'});
     }
 
-    // If email is unique and password was provided, create account
     let user = new User({
       email: email,
       password: password,
@@ -91,11 +75,6 @@ exports.register = function(req, res, next) {
   });
 };
 
-//========================================
-// Authorization Middleware
-//========================================
-
-// Role authorization check
 exports.roleAuthorization = function(role) {
   return function(req, res, next) {
     const user = req.user;
@@ -106,7 +85,6 @@ exports.roleAuthorization = function(role) {
         return next(err);
       }
 
-      // If user is found, check role.
       if (foundUser.role == role) {
         return next();
       }
@@ -117,3 +95,34 @@ exports.roleAuthorization = function(role) {
   }
 };
 
+exports.authenticate = function (req, res, next) {
+  var token = req.headers.authorization.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({message: 'Must have token in header'});
+  }
+
+  jwt.verify(token, config.secret, function (err, user) {
+    if (err) return res.status(401).json({message: err});
+
+    res.json({
+      user: {
+        'email': user.email,
+        'role': user.role
+      },
+      token: 'JWT ' + generateToken(user),
+    });
+  });
+
+};
+
+exports.authCheckMiddleware = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+
+  if (!token) return res.status(401).json({message: 'Must have token in header'});
+
+  return jwt.verify(token, config.secret, (err) => {
+    if (err) { return res.status(401).json({message: 'Token not valid'}); }
+
+    return next();
+  });
+};

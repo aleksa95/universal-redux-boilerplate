@@ -1,10 +1,11 @@
 /* eslint import/no-extraneous-dependencies: 0, global-require: 0 */
 import { routerMiddleware } from 'react-router-redux';
 import { createStore as _createStore, applyMiddleware, compose } from 'redux';
+import reduxThunk from 'redux-thunk';
 
 function createStoreWithReducer(history, data, reducer) {
   const reduxRouterMiddleware = routerMiddleware(history);
-  const middleware = [reduxRouterMiddleware];
+  const middleware = [reduxRouterMiddleware, reduxThunk];
 
   let finalCreateStore;
 

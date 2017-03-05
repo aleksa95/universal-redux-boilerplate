@@ -1,23 +1,21 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
+import formGroup from './authenticationFormGroup';
 
-const renderField = ({ input, label, type, meta: { touched, error } }) => (
-  <div>
-    <input {...input} placeholder={label} type={type}/>
-    {touched && ((error && <span>{error}</span>))}
-  </div>
-);
+const styles = require('../containers/Authentication/_authentication.scss');
 
 let LoginForm = ({ handleSubmit, pristine, submitting }) => ( // eslint-disable-line
-  <form onSubmit={handleSubmit}>
-    <div>
-      <label htmlFor="email">Email</label>
-      <Field name="email" component={renderField} type="text"/>
-    </div>
-    <div>
-      <label htmlFor="password">Password</label>
-      <Field name="password" component={renderField} type="password"/>
-    </div>
+  <form className={styles['authentication-form']} onSubmit={handleSubmit}>
+    <Field name="email" component={formGroup} placeholder="Email" type="text"
+           wrapperClassName={styles['authentication-form-input-group']}
+           inputClassName={styles['authentication-form-input']}
+           errorClassName={styles['authentication-form-error']}/>
+
+    <Field name="password" component={formGroup} placeholder="Password" type="password"
+           wrapperClassName={styles['authentication-form-input-group']}
+           inputClassName={styles['authentication-form-input']}
+           errorClassName={styles['authentication-form-error']}/>
+
     <button type="submit" disabled={pristine || submitting}>Submit</button>
   </form>
 );

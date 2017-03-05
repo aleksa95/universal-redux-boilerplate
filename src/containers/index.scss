@@ -1,8 +1,11 @@
 .app {
-  @import "Header/header";
+  //CONTAINERS
+  @import "Header/_header";
 
-  @import "Homepage/homepage";
-  @import "NotFound/notFound";
+  @import "Homepage/_homepage";
+  @import "NotFound/_notFound";
+
+  @import "Authentication/_authentication";
 }
 
 * {
