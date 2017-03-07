@@ -22,7 +22,8 @@ exports.login = function(req, res, next) {
       return res.json(403, info);
     }
 
-    let userInfo = setUserInfo(res);
+    let userInfo = setUserInfo(user);
+
     res.status(200).json({
       token: 'JWT ' + generateToken(userInfo),
       user: userInfo
@@ -54,7 +55,6 @@ exports.register = function(req, res, next) {
     let user = new User({
       email: email,
       password: password,
-      profile: { firstName: firstName, lastName: lastName }
     });
 
     user.save(function(err, user) {

@@ -1,17 +1,27 @@
 import { apiHost, apiPort } from '../../config/env';
 import axios from 'axios';
 import cookie from 'react-cookie';
-import { AUTH_USER, AUTH_ERROR, UNAUTH_USER, PROTECTED_TEST, AUTHENTICATE, AUTHENTICATATION_SUCCESS, AUTHENTICATATION_FAILED } from './types';
+import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
+  LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
+  LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILED,
+  AUTHENTICATE, AUTHENTICATATION_SUCCESS, AUTHENTICATATION_FAILED,
+  PROTECTED_TEST } from './types';
 import { SubmissionError } from 'redux-form';
 import { push } from 'react-router-redux';
 
 const API_URL = `http://${apiHost}:${apiPort}/api`;
 
 function logoutUser() {
-  return function(dispatch) {
-    dispatch({ type: UNAUTH_USER });
-    cookie.remove('token', { path: '/' });
-    dispatch(push('/'));
+  return function(dispatch, getStore) {
+    dispatch({type: LOGOUT, payload: getStore().auth.user});
+
+    try {
+      cookie.remove('token', { path: '/' });
+      dispatch(push('/'));
+      dispatch({type: LOGOUT_SUCCESS});
+    } catch (err) {
+      dispatch({type: LOGOUT_FAILED, error: err.message});
+    }
   };
 }
 
@@ -44,17 +54,19 @@ function errorHandler(dispatch, error, type) {
   }
 }
 
-function loginUser({ email, password }) {
+function loginUser({ email, password, rememberMe }) {
   return (dispatch) => {
+    dispatch({type: LOGIN, payload: {email, password, rememberMe}});
+
     return axios.post(`${API_URL}/auth/login`, { email, password })
       .then(response => {
         setNewToken(response.data.token);
-        dispatch({ type: AUTH_USER });
+        dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });
         dispatch(push('/dashboard'));
       })
       .catch((error) => {
         if (!error) return;
-        errorHandler(dispatch, error.response, AUTH_ERROR);
+        errorHandler(dispatch, error.response, LOGIN_FAILED);
         const formField = error.response.data.type;
         let submissionError = {}; // eslint-disable-line
         submissionError[formField] = error.response.data.error;
@@ -64,16 +76,18 @@ function loginUser({ email, password }) {
   };
 }
 
-function registerUser({ email, password }) {
+function signUpUser({ email, password }) {
   return (dispatch) => {
+    dispatch({type: SIGN_UP, payload: {email, password}});
+
     return axios.post(`${API_URL}/auth/register`, { email, password })
       .then(response => {
         setNewToken(response.data.token);
-        dispatch({ type: AUTH_USER });
+        dispatch({ type: SIGN_UP_SUCCESS, payload: response.data.user });
         dispatch(push('/dashboard'));
       })
       .catch((error) => {
-        errorHandler(dispatch, error.response, AUTH_ERROR);
+        errorHandler(dispatch, error.response, SIGN_UP_FAILED);
         const formField = error.response.data.type;
         let submissionError = {}; // eslint-disable-line
         submissionError[formField] = error.response.data.error;
@@ -93,19 +107,17 @@ export function protectedTest() {
           type: PROTECTED_TEST,
           payload: response.data.content
         });
-      })
-      .catch((error) => {
-        errorHandler(dispatch, error.response, AUTH_ERROR);
       });
+      // .catch((error) => {
+      //   // errorHandler(dispatch, error.response, AUTH_ERROR);
+      // });
   };
 }
 
 function checkAuth(token) {
-  return function(dispatch) {
+  return function(dispatch, getStore) {
     const isTokenPresent = !!token;
-    dispatch({
-      type: AUTHENTICATE
-    });
+    dispatch({type: AUTHENTICATE, payload: getStore().auth.user});
 
     if (isTokenPresent) {
       axios.get(`${API_URL}/auth/authenticate`, {
@@ -125,7 +137,7 @@ function checkAuth(token) {
         });
     } else {
       dispatch({
-        type: AUTHENTICATATION_FAILED
+        type: AUTHENTICATATION_FAILED, payload: 'Token is not present'
       });
     }
   };
@@ -138,5 +150,5 @@ function redirect(route) {
 }
 
 module.exports = {
-  logoutUser, loginUser, checkAuth, registerUser, redirect
+  logoutUser, loginUser, checkAuth, signUpUser, redirect
 };

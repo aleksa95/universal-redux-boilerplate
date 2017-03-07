@@ -16,6 +16,11 @@ let LoginForm = ({ handleSubmit, pristine, submitting }) => ( // eslint-disable-
            inputClassName={styles['authentication-form-input']}
            errorClassName={styles['authentication-form-error']}/>
 
+    <Field name="rememberMe" id="rememberMe" component={formGroup} placeholder="Password" type="checkbox"
+           showLabel="true" labelText="Remember me" labelClass={styles['authentication-form-remember-me-label']}
+           wrapperClassName={styles['authentication-form-input-group']}
+           inputClassName={styles['authentication-form-checkbox']}/>
+
     <button type="submit" disabled={pristine || submitting}>Submit</button>
   </form>
 );

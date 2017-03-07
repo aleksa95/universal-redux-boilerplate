@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SignUpForm from '../../../components/loginForm';
-import { registerUser } from '../../../actions/auth-actions';
+import { signUpUser } from '../../../actions/auth-actions';
 
 class SignUp extends React.Component {
   submit(values) {
-    return this.props.registerUser(values);
+    return this.props.signUpUser(values);
   }
 
   render() {
@@ -21,7 +21,7 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
-  registerUser: React.PropTypes.func,
+  signUpUser: React.PropTypes.func,
 };
 
-export default connect(null, { registerUser })(SignUp);
+export default connect(null, { signUpUser })(SignUp);

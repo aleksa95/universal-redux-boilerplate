@@ -22,7 +22,7 @@ function createStoreWithReducer(history, data, reducer) {
     finalCreateStore = applyMiddleware(...middleware)(_createStore);
   }
 
-  const store = finalCreateStore(reducer, data);
+  let store = finalCreateStore(reducer, data); // eslint-disable-line
 
   if (process.env.NODE_ENV === 'development' && module.hot) {
     module.hot.accept('../reducers', () => {
