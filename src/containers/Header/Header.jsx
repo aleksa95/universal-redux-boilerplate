@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { logoutUser } from '../../actions/auth-actions';
 
-const styles = require('./_header.scss');
+const HStyles = require('./_header.scss');
 
 const Header = ({ isUserAuthenticated, isUserAuthenticating, logoutUser }) => (
-  <header className={ styles.header }>
+  <header className={ HStyles.header }>
     <div className="left-section">
       <Link to="/">Logo</Link>
     </div>
@@ -14,12 +14,12 @@ const Header = ({ isUserAuthenticated, isUserAuthenticating, logoutUser }) => (
     {!isUserAuthenticated && !isUserAuthenticating &&
     <div className="right-section">
       <Link to="/login">Login</Link>
-      <Link to="/sign-up" className={ styles['sign-up-link'] }>Sign Up</Link>
+      <Link to="/sign-up" className={ HStyles['sign-up-link'] }>Sign Up</Link>
     </div> }
 
     {isUserAuthenticated && !isUserAuthenticating &&
     <div className="right-section">
-      <div className={ styles['sign-out-btn'] } onClick={ logoutUser }>Logout</div>
+      <div className={ HStyles['sign-out-btn'] } onClick={ logoutUser }>Logout</div>
     </div> }
   </header>
 );
