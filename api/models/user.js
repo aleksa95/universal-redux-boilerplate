@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
+import CONSTS from '../data/Constants';
 
 const UserSchema = new Schema({
     email: {
@@ -19,8 +20,8 @@ const UserSchema = new Schema({
     },
     role: {
       type: String,
-      enum: ['Member', 'Client', 'Owner', 'Admin'],
-      default: 'Member'
+      enum: [CONSTS.ROLES.USER, CONSTS.ROLES.USER],
+      default: CONSTS.ROLES.USER
     },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date }
@@ -29,6 +30,11 @@ const UserSchema = new Schema({
     timestamps: true
   });
 
+/**
+ * Checks if given password is a match with the encrypted password in the database
+ * @param candidatePassword
+ * @param cb
+ */
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
     if (err) { return cb(err); }
@@ -53,5 +59,16 @@ UserSchema.pre('save', function(next) {
     });
   });
 });
+
+/**
+ * Generates password hash before writing a new user to the databse
+ */
+UserSchema.methods.comparePassword = function(candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    if (err) { return cb(err); }
+
+    cb(null, isMatch);
+  });
+};
 
 module.exports = mongoose.model('User', UserSchema);

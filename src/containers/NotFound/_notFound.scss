@@ -1,3 +1,48 @@
-.bla {
-  color: red
+.not-found-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  color: red;
+
+  img {
+    width: 250px;
+    margin-top: 30px;
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 15px;
+    color: gray;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    border: 2px solid #b6b6b6;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+    background: #fff;
+  }
+  button:hover {
+    color: #fff;
+    background-color: transparent;
+  }
+  button:hover:before {
+    top: 0;
+    bottom: auto;
+    height: 100%;
+  }
+  button:before {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 0;
+    width: 100%;
+    z-index: -1;
+    content: '';
+    color: #000;
+    background: #b6b6b6;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  }
 }

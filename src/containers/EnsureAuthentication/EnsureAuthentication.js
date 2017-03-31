@@ -3,22 +3,29 @@ import { redirect } from '../../actions/auth-actions';
 import { connect } from 'react-redux';
 
 class EnsureAuthentication extends Component {
-  componentDidMount() {
-    if (!this.props.isUserAuthenticated) {
-      this.props.redirect('/login');
-    }
+  componentWillMount() {
+    const isAuthenticated = () => {
+      if (!this.props.isUserAuthenticated && !this.props.isUserAuthenticating) {
+        clearInterval(interval); // eslint-disable-line
+        this.props.redirect('/login');
+      }
+
+      if (this.props.isUserAuthenticated && !this.props.isUserAuthenticating) {
+        clearInterval(interval); // eslint-disable-line
+      }
+    };
+
+    const interval = setInterval(isAuthenticated, 100);
   }
 
   render() {
-    if (this.props.isUserAuthenticated) {
-      return this.props.children;
-    }
-    return null;
+    return this.props.children;
   }
 }
 
 EnsureAuthentication.propTypes = {
   isUserAuthenticated: PropTypes.bool.isRequired,
+  isUserAuthenticating: PropTypes.bool.isRequired,
   children: PropTypes.any,
   redirect: PropTypes.func
 };
@@ -26,6 +33,7 @@ EnsureAuthentication.propTypes = {
 function mapStateToProps(state) {
   return {
     isUserAuthenticated: state.auth.authenticated,
+    isUserAuthenticating: state.auth.authenticating
   };
 }
 

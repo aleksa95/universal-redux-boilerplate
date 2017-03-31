@@ -3,28 +3,30 @@ import axios from 'axios';
 import cookie from 'react-cookie';
 import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
-  LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILED,
-  AUTHENTICATE, AUTHENTICATATION_SUCCESS, AUTHENTICATATION_FAILED,
-  PROTECTED_TEST } from './types';
+  LOGOUT, LOGOUT_SUCCESS,
+  AUTHENTICATE, AUTHENTICATATION_SUCCESS, AUTHENTICATATION_FAILED} from './types';
 import { SubmissionError } from 'redux-form';
 import { push } from 'react-router-redux';
 
 const API_URL = `http://${apiHost}:${apiPort}/api`;
 
+/**
+ * Logs out user
+ * @returns {function(*, *)}
+ */
 function logoutUser() {
-  return function(dispatch, getStore) {
+  return (dispatch, getStore) => { // eslint-disable-line
     dispatch({type: LOGOUT, payload: getStore().auth.user});
-
-    try {
-      cookie.remove('token', { path: '/' });
-      dispatch(push('/'));
-      dispatch({type: LOGOUT_SUCCESS});
-    } catch (err) {
-      dispatch({type: LOGOUT_FAILED, error: err.message});
-    }
+    cookie.remove('token', { path: '/' });
+    console.error('LOGOUT');
+    dispatch({type: LOGOUT_SUCCESS});
   };
 }
 
+/**
+ * Writes new JWT token into the cookie
+ * @param token
+ */
 function setNewToken(token) {
   cookie.save('token', token, { path: '/'});
 }
@@ -54,9 +56,15 @@ function errorHandler(dispatch, error, type) {
   }
 }
 
-function loginUser({ email, password, rememberMe }) {
+/**
+ * Logs in user
+ * @param email
+ * @param password
+ * @returns {function(*=)}
+ */
+function loginUser({ email, password }) {
   return (dispatch) => {
-    dispatch({type: LOGIN, payload: {email, password, rememberMe}});
+    dispatch({type: LOGIN, payload: {email, password}});
 
     return axios.post(`${API_URL}/auth/login`, { email, password })
       .then(response => {
@@ -76,11 +84,17 @@ function loginUser({ email, password, rememberMe }) {
   };
 }
 
+/**
+ * Creates new user
+ * @param email
+ * @param password
+ * @returns {function(*=)}
+ */
 function signUpUser({ email, password }) {
   return (dispatch) => {
     dispatch({type: SIGN_UP, payload: {email, password}});
 
-    return axios.post(`${API_URL}/auth/register`, { email, password })
+    return axios.post(`${API_URL}/auth/sign-up`, { email, password })
       .then(response => {
         setNewToken(response.data.token);
         dispatch({ type: SIGN_UP_SUCCESS, payload: response.data.user });
@@ -97,58 +111,86 @@ function signUpUser({ email, password }) {
   };
 }
 
-export function protectedTest() {
-  return function(dispatch) { // eslint-disable-line
-    axios.get(`${API_URL}/protected`, {
-      headers: { 'Authorization': cookie.load('token') }
-    })
-      .then(response => {
-        dispatch({
-          type: PROTECTED_TEST,
-          payload: response.data.content
-        });
-      });
-      // .catch((error) => {
-      //   // errorHandler(dispatch, error.response, AUTH_ERROR);
-      // });
-  };
-}
-
+/**
+ * Checks if user has
+ * @param token
+ * @returns {function(*, *)}
+ */
 function checkAuth(token) {
-  return function(dispatch, getStore) {
+  return (dispatch, getStore) => {
     const isTokenPresent = !!token;
+    const config = { headers: { 'Authorization': cookie.load('token') }};
+
     dispatch({type: AUTHENTICATE, payload: getStore().auth.user});
 
-    if (isTokenPresent) {
-      axios.get(`${API_URL}/auth/authenticate`, {
-        headers: { 'Authorization': cookie.load('token') }
-      }).then(response => {
-        setNewToken(response.data.token);
-        dispatch({
-          type: AUTHENTICATATION_SUCCESS,
-          payload: response.data.user
-        });
-      })
-        .catch((error) => {
-          dispatch({
-            type: AUTHENTICATATION_FAILED,
-            payload: error
-          });
-        });
-    } else {
+    if (!isTokenPresent) {
       dispatch({
         type: AUTHENTICATATION_FAILED, payload: 'Token is not present'
       });
+      return;
     }
+
+    axios.get(`${API_URL}/auth/authenticate`, config).then(response => {
+      setNewToken(response.data.token);
+      dispatch({
+        type: AUTHENTICATATION_SUCCESS,
+        payload: response.data.user
+      });
+    }).catch((error) => {
+      if (cookie.load('token')) cookie.remove('token', { path: '/' });
+
+      dispatch({
+        type: AUTHENTICATATION_FAILED,
+        payload: error.message
+      });
+    });
   };
 }
 
+/**
+ * Dispatches Action to routing reducer
+ * @param route
+ * @returns {function(*, *)}
+ */
 function redirect(route) {
   return function(dispatch) {
     dispatch(push(route));
   };
 }
 
+/**
+ * Checks if Auth form fields are valid
+ * @returns {{}}
+ */
+const authFormsValidator = values => {
+  const errors = {};
+
+  if (!values.email) errors.email = 'Required';
+
+  else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Invalid email address';
+  }
+
+  if (!values.password) errors.password = 'Required';
+
+  return errors;
+};
+
+/**
+ * TEST
+ * @param user
+ * @returns {function(*, *)}
+ */
+function test(user) { // eslint-disable-line
+  return (dispatch) => { // eslint-disable-line
+    return axios.post(API_URL + 'user/test', { user: user }, {
+      headers: { 'Authorization': cookie.load('token') }
+    }).then(response => {
+      console.log(response);
+    });
+  };
+}
+
 module.exports = {
-  logoutUser, loginUser, checkAuth, signUpUser, redirect
+  logoutUser, loginUser, checkAuth, signUpUser, redirect, authFormsValidator
 };

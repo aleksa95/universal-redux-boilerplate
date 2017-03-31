@@ -1,10 +1,11 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import formGroup from './authenticationFormGroup';
+import { authFormsValidator } from '../actions/auth-actions';
 
 const styles = require('../containers/Authentication/_authentication.scss');
 
-let SignUpForm = ({ handleSubmit, pristine, submitting }) => ( // eslint-disable-line
+let SignUpForm = ({ handleSubmit, pristine, submitting, invalid }) => ( // eslint-disable-line
   <form className={styles['authentication-form']} onSubmit={handleSubmit}>
     <Field name="email" component={formGroup} type="text" placeholder="Email"
            wrapperClassName={styles['authentication-form-input-group']}
@@ -16,26 +17,15 @@ let SignUpForm = ({ handleSubmit, pristine, submitting }) => ( // eslint-disable
            inputClassName={styles['authentication-form-input']}
            errorClassName={styles['authentication-form-error']}/>
 
-    <button type="submit" disabled={pristine || submitting}>Submit</button>
+    <button type="submit" disabled={pristine || submitting || invalid}>Submit</button>
   </form>
 );
 
-const validate = values => {
-  const errors = {};
-  if (!values.email) {
-    errors.email = 'Required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address';
-  }
-  if (!values.password) {
-    errors.password = 'Required';
-  }
-  return errors;
-};
+const validator = authFormsValidator;
 
 SignUpForm = reduxForm({
   form: 'signUp',
-  validate
+  validator
 })(SignUpForm);
 
 export default SignUpForm;

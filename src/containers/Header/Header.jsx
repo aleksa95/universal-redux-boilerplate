@@ -19,7 +19,7 @@ class Header extends Component {
         </div> }
         {this.props.isUserAuthenticated &&
         <div className="right-section">
-          <div onClick={ this.props.logoutUser }>Logout</div>
+          <div className={ styles['sign-out-btn'] } onClick={ this.props.logoutUser }>Logout</div>
         </div> }
       </header>
     );

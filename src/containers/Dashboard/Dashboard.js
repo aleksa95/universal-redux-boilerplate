@@ -1,7 +1,8 @@
 /* eslint react/prefer-stateless-function: 0 */
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
   render() {
     return (
       <div>
@@ -10,3 +11,15 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+Dashboard.propTypes = {
+  user: PropTypes.object,
+};
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user,
+  };
+};
+
+export default connect(mapStateToProps, null)(Dashboard);

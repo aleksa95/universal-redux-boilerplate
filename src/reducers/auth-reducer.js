@@ -1,8 +1,7 @@
 import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
   LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILED,
-  AUTHENTICATE, AUTHENTICATATION_SUCCESS, AUTHENTICATATION_FAILED,
-  PROTECTED_TEST } from '../actions/types';
+  AUTHENTICATE, AUTHENTICATATION_SUCCESS, AUTHENTICATATION_FAILED} from '../actions/types';
 
 const INITIAL_STATE = {
   error: '',
@@ -44,8 +43,6 @@ export default function(state = INITIAL_STATE, action) {
     case AUTHENTICATATION_FAILED:
       return {...state, authenticating: false, authenticated: false, error: action.payload };
 
-    case PROTECTED_TEST:
-      return { ...state, content: action.payload };
     default:
       return state;
   }

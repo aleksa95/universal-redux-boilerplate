@@ -1,20 +1,14 @@
-import AuthenticationController from '../controllers/authentication';
 import express from 'express';
+import authRoutes from './authenticationRoutes';
+import userRoutes from './userRoutes';
 
 module.exports = function(app) {
 
-  const apiRoutes = express.Router(),
-        authRoutes = express.Router();
+  const apiRoutes = express.Router();
 
   apiRoutes.use('/auth', authRoutes);
 
-  authRoutes.post('/register', AuthenticationController.register);
-
-  authRoutes.post('/login', AuthenticationController.login);
-
-  authRoutes.get('/authenticate', AuthenticationController.authenticate);
-
-  authRoutes.post('/check-role', AuthenticationController.authCheckMiddleware , AuthenticationController.roleAuthorization);
+  apiRoutes.use('/user', userRoutes);
 
   app.use('/api', apiRoutes);
 };

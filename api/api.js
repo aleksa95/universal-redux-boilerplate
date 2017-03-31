@@ -6,7 +6,6 @@ import mongoose from 'mongoose';
 import { apiPort, database } from '../config/env';
 import router from './router/router';
 import passport from 'passport';
-import passportConfig from '../config/passport';
 
 const app = express();
 

@@ -20,7 +20,7 @@
 
       .authentication-form-input {
         font-size: $font-size-regular;
-        padding: 10px 0;
+        padding: 10px 0 10px 5px;
         width: 100%;
         margin-top: 30px;
         border: none;
@@ -56,6 +56,12 @@
 
       &:hover {
         background: #f0f0f0;
+      }
+
+      &:disabled {
+        user-select: none;
+        cursor: not-allowed;
+        background: #fff;
       }
     }
   }
