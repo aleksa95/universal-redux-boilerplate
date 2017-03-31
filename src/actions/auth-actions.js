@@ -18,7 +18,6 @@ function logoutUser() {
   return (dispatch, getStore) => { // eslint-disable-line
     dispatch({type: LOGOUT, payload: getStore().auth.user});
     cookie.remove('token', { path: '/' });
-    console.error('LOGOUT');
     dispatch({type: LOGOUT_SUCCESS});
   };
 }

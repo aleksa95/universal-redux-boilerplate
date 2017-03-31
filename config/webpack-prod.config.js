@@ -26,8 +26,8 @@ module.exports = {
   },
   output: {
     path: assetsPath,
-    filename: '[name]-[hash].js',
-    chunkFilename: '[name]-[chunkhash].js',
+    filename: '[hash]-[hash].js',
+    chunkFilename: '[chunkhash]-[chunkhash].js',
     publicPath: '/assets/',
   },
   module: {
@@ -77,7 +77,7 @@ module.exports = {
   },
   plugins: [
     new CleanPlugin([assetsPath], { root: path.resolve(__dirname, '../') }),
-    new ExtractTextPlugin('[name]-[chunkhash].css', {allChunks: true}),
+    new ExtractTextPlugin('[chunkhash]-[chunkhash].css', {allChunks: true}),
 
     new webpack.DefinePlugin({
       'process.env': {
