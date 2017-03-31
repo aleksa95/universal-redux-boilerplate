@@ -2,17 +2,14 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-export default class NotFound extends React.Component {
+const styles = require('./_notFound.scss');
 
-  render() {
-    const styles = require('./_notFound.scss');
-    return (
-      <div className={styles['not-found-wrapper']}>
+const NotFound = () => (
+  <div className={styles['not-found-wrapper']}>
+    <img src={ require('../../images/not-found.png')}/>
+    <h1>There is no such page</h1>
+    <button><Link to="/">Go home</Link></button>
+  </div>
+);
 
-        <img src={ require('../../images/not-found.png')}/>
-        <h1>There is no such page</h1>
-        <button><Link to="/">Go home</Link></button>
-      </div>
-    );
-  }
-}
+export default NotFound;

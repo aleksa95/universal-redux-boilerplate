@@ -1,4 +1,5 @@
-module.exports = { "extends": "eslint-config-airbnb",
+module.exports = {
+  "extends": "eslint-config-airbnb",
   "env": {
     "browser": true,
     "node": true,
@@ -18,6 +19,7 @@ module.exports = { "extends": "eslint-config-airbnb",
     "no-console": 0,
     "no-alert": 0,
     "no-new": 0,
+    "no-shadow": 0
   },
   "plugins": [
     "react", "import"

@@ -7,9 +7,9 @@ import { checkAuth as _checkAuth } from './actions/auth-actions';
 
 export default (store) => { // eslint-disable-line
 
-  function checkAuth() {
+  const checkAuth = () => {
     return store.dispatch(_checkAuth(cookie.load('token'))); // eslint-disable-line
-  }
+  };
 
   return (
     <Route path="/" onEnter={checkAuth} component={App}>

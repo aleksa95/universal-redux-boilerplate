@@ -18,9 +18,9 @@ export default class Default extends Component {
               { Object.keys(assets.styles).length === 0 ? <style dangerouslySetInnerHTML={{__html: require('../containers/index.scss')._style}}/> : null }
           </head>
           <body>
-          <div id="root" dangerouslySetInnerHTML={{ __html: content }} />
-          <script dangerouslySetInnerHTML={{__html: `window.__data=${serialize(store.getState())};`}} charSet="UTF-8"/>
-          <script src={assets.javascript.main} charSet="UTF-8"/>
+            <div id="root" dangerouslySetInnerHTML={{ __html: content }} />
+            <script dangerouslySetInnerHTML={{__html: `window.__data=${serialize(store.getState())};`}} charSet="UTF-8"/>
+            <script src={assets.javascript.main} charSet="UTF-8"/>
           </body>
           </html>
       );

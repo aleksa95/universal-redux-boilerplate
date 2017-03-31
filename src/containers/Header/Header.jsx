@@ -1,41 +1,39 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { logoutUser } from '../../actions/auth-actions';
 
-class Header extends Component {
+const styles = require('./_header.scss');
 
-  render() {
-    const styles = require('./_header.scss');
-    return (
-      <header className={ styles.header }>
-        <div className="left-section">
-          <Link to="/">Logo</Link>
-        </div>
-        {!this.props.isUserAuthenticated &&
-        <div className="right-section">
-          <Link to="/login">Login</Link>
-          <Link to="/sign-up" className={ styles['sign-up-link'] }>Sign Up</Link>
-        </div> }
-        {this.props.isUserAuthenticated &&
-        <div className="right-section">
-          <div className={ styles['sign-out-btn'] } onClick={ this.props.logoutUser }>Logout</div>
-        </div> }
-      </header>
-    );
-  }
-}
+const Header = ({ isUserAuthenticated, isUserAuthenticating, logoutUser }) => (
+  <header className={ styles.header }>
+    <div className="left-section">
+      <Link to="/">Logo</Link>
+    </div>
+
+    {!isUserAuthenticated && !isUserAuthenticating &&
+    <div className="right-section">
+      <Link to="/login">Login</Link>
+      <Link to="/sign-up" className={ styles['sign-up-link'] }>Sign Up</Link>
+    </div> }
+
+    {isUserAuthenticated && !isUserAuthenticating &&
+    <div className="right-section">
+      <div className={ styles['sign-out-btn'] } onClick={ logoutUser }>Logout</div>
+    </div> }
+  </header>
+);
 
 Header.propTypes = {
-  location: PropTypes.object,
-  isUserAuthenticated: PropTypes.bool,
+  isUserAuthenticated: PropTypes.bool.isRequired,
+  isUserAuthenticating: PropTypes.bool.isRequired,
   logoutUser: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
   return {
-    location: state.routing.locationBeforeTransitions.location,
     isUserAuthenticated: state.auth.authenticated,
+    isUserAuthenticating: state.auth.authenticating
   };
 };
 
