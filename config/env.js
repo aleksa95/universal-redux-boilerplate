@@ -6,4 +6,11 @@ module.exports = {
   apiPort: 3001,
   webpackHost: 'localhost',
   webpackPort: 3002,
+  mailerSettings: {
+    service: 'SendGrid',
+    auth: {
+      user: 'quincygod',
+      pass: 'Kikiriki1'
+    }
+  }
 };

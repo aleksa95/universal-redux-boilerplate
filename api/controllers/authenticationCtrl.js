@@ -127,18 +127,12 @@ exports.forgotPassword = function (req, res, next) {
       });
     },
     (token, user, done) => {
-      var smtpTransport = nodemailer.createTransport({
-        service: 'SendGrid',
-        auth: {
-          user: 'quincygod',
-          pass: 'Kikiriki1'
-        }
-      });
+      var smtpTransport = nodemailer.createTransport(config.mailerSettings);
       var mailOptions = {
         to: user.email,
         from: 'passwordreset@demo.com',
         subject: 'Node.js Password Reset',
-        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+        html: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
         req.headers.origin + '/reset/' + token + '\n\n' +
         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
@@ -182,7 +176,7 @@ exports.resetPassword = (req, res, next) => {
 
   waterfall([
     done => {
-      User.findOne({ _id: userId }, err, user => {
+      User.findOne({ _id: userId }, (err, user) => {
         if (!user) return errorHandler(ERROR_TYPES.USER.RESET_PASSWORD.NO_USER, res);
 
         user.comparePassword(currentPassword, (err, isMatch) => {
@@ -201,13 +195,7 @@ exports.resetPassword = (req, res, next) => {
       });
     },
     (user, done) => {
-      var smtpTransport = nodemailer.createTransport({
-        service: 'SendGrid',
-        auth: {
-          user: 'quincygod',
-          pass: 'Kikiriki1'
-        }
-      });
+      var smtpTransport = nodemailer.createTransport(config.mailerSettings);
       var mailOptions = {
         to: user.email,
         from: 'passwordreset@demo.com',
