@@ -9,10 +9,6 @@ class EnsureAuthentication extends Component {
         clearInterval(interval); // eslint-disable-line
         this.props.redirect('/login');
       }
-
-      if (this.props.isUserAuthenticated && !this.props.isUserAuthenticating) {
-        clearInterval(interval); // eslint-disable-line
-      }
     };
 
     const interval = setInterval(isAuthenticated, 100);

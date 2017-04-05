@@ -21,7 +21,7 @@ const INITIAL_STATE = {
   user: {},
   forgotPasswordOngoing: false,
   userIdResetPassword: '',
-  resetPasswordSuccess: false,
+  resetPasswordSuccess: false
 };
 
 export default function(state = INITIAL_STATE, action) {
