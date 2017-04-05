@@ -4,10 +4,10 @@ import config from '../../config/env';
 import passport from 'passport';
 import ERROR_TYPES from '../errorHandler/errorTypes';
 import errorHandler from '../errorHandler/errorHandler';
-import passportConfig from '../../config/passport'; // eslint-disable-line
 import { waterfall } from 'async';
 import bcrypt from 'bcrypt-nodejs';
 import nodemailer from 'nodemailer';
+import passportConfig from '../../config/passport'; // eslint-disable-line
 
 /**
  * Create JWT token with user information and secret key
@@ -15,23 +15,23 @@ import nodemailer from 'nodemailer';
  * @param setExpire
  * @returns {object}
  */
-function generateToken(user, setExpire) {
+const generateToken = (user, setExpire) => {
   var jwtConfig = setExpire ? { expiresIn: '24h'} : {};
   return 'JWT ' + jwt.sign(user, config.secret, jwtConfig);
-}
+};
 
 /**
  * Creates a user object that goes into thw JWT token
  * @param user
  * @returns {object}
  */
-function setUserInfo(user) {
+const setUserInfo = user => {
   return {
     _id: user._id,
     email: user.email,
     role: user.role,
   };
-}
+};
 
 /**
  * Uses passport local authentication on login request and sends response back
@@ -39,11 +39,11 @@ function setUserInfo(user) {
  * @param res
  * @param next
  */
-exports.login = function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
+exports.login = (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
 
-    if (!user) return res.json(403, info);
+    if (!user) return errorHandler(ERROR_TYPES.USER.LOGIN.NO_MATCH_SEND, res, info);
 
     let userInfo = setUserInfo(user);
 
@@ -61,7 +61,7 @@ exports.login = function(req, res, next) {
  * @param res
  * @param next
  */
-exports.signUp = function(req, res, next) {
+exports.signUp = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -69,7 +69,7 @@ exports.signUp = function(req, res, next) {
 
   if (!password) return errorHandler(ERROR_TYPES.USER.SIGN_UP.NO_PASSWORD, res);
 
-  User.findOne({ email: email }, function(err, existingUser) {
+  User.findOne({ email: email }, (err, existingUser) => {
     if (err) { return next(err); }
 
     if (existingUser) return errorHandler(ERROR_TYPES.USER.SIGN_UP.EMAIL_TAKEN, res);
@@ -79,9 +79,7 @@ exports.signUp = function(req, res, next) {
       password: password
     });
 
-    user.save(function(err, user) {
-      if (err) return next(err);
-
+    user.save().then(user => {
       let userInfo = setUserInfo(user);
 
       res.status(201).json({
@@ -92,33 +90,43 @@ exports.signUp = function(req, res, next) {
   });
 };
 
+/**
+ * Finds user by given email, sets user reset token and token expiration, sends email with password reset token
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.forgotPassword = function (req, res, next) {
   const email = req.body.email;
 
   if (!email) return errorHandler(ERROR_TYPES.USER.FORGOT_PASSWORD.NO_EMAIL, res);
 
   waterfall([
-    function(done) {
-      bcrypt.genSalt(20, function(err, buf) {
-        var token = buf.toString('hex');
+    done => {
+      bcrypt.genSalt(20, (err, buf) => {
+        let token = buf.toString('hex');
+
+        token = token.replace(/\//g, Math.floor(Math.random() * 10 + 1));
+
         done(err, token);
       });
     },
-    function(token, done) {
+    (token, done) => {
       User.findOne({ email: email }, function(err, user) {
-        if (err) { return next(err); }
+        if (err) return done(err);
 
         if (!user) return errorHandler(ERROR_TYPES.USER.FORGOT_PASSWORD.NON_EXISTING_EMAIL, res);
 
         user.resetPasswordToken = token;
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-        user.save(function(err) {
-          done(err, token, user);
+        user.save().then((savedUser) => {
+          done(err, token, savedUser);
         });
       });
     },
-    function(token, user, done) {
+    (token, user, done) => {
       var smtpTransport = nodemailer.createTransport({
         service: 'SendGrid',
         auth: {
@@ -135,17 +143,23 @@ exports.forgotPassword = function (req, res, next) {
         req.headers.origin + '/reset/' + token + '\n\n' +
         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
-      smtpTransport.sendMail(mailOptions, function(err) {
+      smtpTransport.sendMail(mailOptions, err => {
         res.sendStatus(200);
         done(err, 'done');
       });
     }
-  ], function(err, message) {
-    console.log(err, message);
+  ], (err) => {
     if (err) return next(err);
   });
 };
 
+/**
+ * Checks if reset password token is valid and returns user if it is
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.checkResetToken = (req, res, next) => {
   User.findOne({ resetPasswordToken: req.body.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
     if (!user) return errorHandler(ERROR_TYPES.USER.CHECK_TOKEN.NOT_VALID, res);
@@ -154,17 +168,24 @@ exports.checkResetToken = (req, res, next) => {
   });
 };
 
+/**
+ *
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.resetPassword = (req, res, next) => {
   const userId = req.body.userId,
         currentPassword = req.body.currentPassword,
         newPassword = req.body.newPassword;
 
   waterfall([
-    function(done) {
-      User.findOne({ _id: userId }, function(err, user) {
+    done => {
+      User.findOne({ _id: userId }, err, user => {
         if (!user) return errorHandler(ERROR_TYPES.USER.RESET_PASSWORD.NO_USER, res);
 
-        user.comparePassword(currentPassword, function(err, isMatch) {
+        user.comparePassword(currentPassword, (err, isMatch) => {
           if (err) return done(err);
 
           if (!isMatch) return errorHandler(ERROR_TYPES.USER.RESET_PASSWORD.NO_MATCH, res);
@@ -173,13 +194,13 @@ exports.resetPassword = (req, res, next) => {
           user.resetPasswordToken = undefined;
           user.resetPasswordExpires = undefined;
 
-          user.save(function(err) {
-            done(err, user);
+          user.save().then(savedUser => {
+            done(null, savedUser);
           });
         });
       });
     },
-    function(user, done) {
+    (user, done) => {
       var smtpTransport = nodemailer.createTransport({
         service: 'SendGrid',
         auth: {
@@ -194,13 +215,13 @@ exports.resetPassword = (req, res, next) => {
         text: 'Hello,\n\n' +
         'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
-      smtpTransport.sendMail(mailOptions, function(err) {
+      smtpTransport.sendMail(mailOptions, err => {
         res.sendStatus(200);
         done(err);
       });
     }
-  ], function(err) {
-    console.log('RESET_ERROR', err);
+  ], err => {
+    if (err) return next(err);
   });
 };
 
@@ -209,12 +230,12 @@ exports.resetPassword = (req, res, next) => {
  * @param req
  * @param res
  */
-exports.authenticate = function (req, res) {
+exports.authenticate = (req, res) => {
   var token = req.headers.authorization.split(' ')[1];
 
   if (!token) return errorHandler(ERROR_TYPES.USER.FAILED_AUTHENTICATION, res);
 
-  jwt.verify(token, config.secret, function (err, user) {
+  jwt.verify(token, config.secret, (err, user) => {
     if (err) return errorHandler(ERROR_TYPES.USER.INVALID_TOKEN, res, err);
 
     let userInfo = setUserInfo(user);

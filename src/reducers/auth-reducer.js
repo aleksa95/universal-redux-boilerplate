@@ -20,7 +20,8 @@ const INITIAL_STATE = {
   resetPassUser: {},
   user: {},
   forgotPasswordOngoing: false,
-  userIdResetPassword: ''
+  userIdResetPassword: '',
+  resetPasswordSuccess: false,
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -56,7 +57,7 @@ export default function(state = INITIAL_STATE, action) {
     case RESET_PASSWORD:
       return {...state, resettingPassword: true, userIdResetPassword: action.payload.userId };
     case RESET_PASSWORD_SUCCESS:
-      return {...state, resettingPassword: false, error: false };
+      return {...state, resettingPassword: false, error: false, resetPasswordSuccess: true };
     case RESET_PASSWORD_FAILED:
       return {...state, resettingPassword: false, error: action.payload };
 

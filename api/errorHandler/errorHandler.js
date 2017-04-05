@@ -1,13 +1,17 @@
 import ERROR_TYPES from './errorTypes';
 
 // 401 - Unauthorized
-// 422 - Unprocessable Entity
+// 403 - Forbidden
+// 422 - Unprocessed Entity
 
 const errorHandler = function (ERROR_TYPE, res, message) {
   switch (ERROR_TYPE) {
 
     case ERROR_TYPES.USER.LOGIN.NO_MATCH:
       return res(null, false, { type:'email', error: "Your login details do not match. Please try again." });
+
+    case ERROR_TYPES.USER.LOGIN.NO_MATCH_SEND:
+      return res.status(422).send(message);
 
     case ERROR_TYPES.USER.LOGIN.NON_EXISTING_EMAIL:
       return res(null, false, { type: 'email', error: 'There is no user registered with that email.' });
@@ -40,7 +44,7 @@ const errorHandler = function (ERROR_TYPE, res, message) {
       return res.status(422).send({ type: 'token', error: 'Password reset token is invalid or has expired.' });
 
     case ERROR_TYPES.USER.RESET_PASSWORD.NO_USER:
-      return res.status(422).send({ type: 'user', error: 'There is no user with that ID'});
+      return res.status(422).send({ type: 'currentPassword', error: 'There is no user with that ID'});
 
     case ERROR_TYPES.USER.RESET_PASSWORD.NO_MATCH:
       return res.status(422).send({ type: 'currentPassword', error: "The submitted current password is not valid"});

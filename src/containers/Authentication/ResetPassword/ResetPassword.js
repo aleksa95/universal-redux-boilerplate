@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { redirect, resetPassword, checkIfResetPasswordTokenIsValid } from '../../../actions/auth-actions';
 import ResetPasswordForm from '../../../components/ResetPasswordForm';
 
 const RPAStyles = require('../_authentication.scss');
+const RPSStyles = require('../ForgotPassword/forgotPasswordSuccess.scss');
 
 class ResetPassword extends Component {
 
@@ -20,13 +22,20 @@ class ResetPassword extends Component {
     return (
       <div>
         { this.props.resetTokenError &&
-          <div>{ this.props.error }</div>
+          <div className={RPSStyles['forgot-password-success-wrapper']}>
+            <h3>{ this.props.error }</h3>
+          </div>
         }
 
-        { !this.props.resetTokenError &&
+        { !this.props.resetTokenError && !this.props.resetPasswordSuccess &&
           <div className={RPAStyles['authentication-wrapper']}>
             <div className={RPAStyles['authentication-title']}>Reset password</div>
-            <ResetPasswordForm initialValues={{userId: this.props.user._id}} onSubmit={this.props.resetPassword.bind(this)}/>
+            <ResetPasswordForm userId={this.props.user._id} onSubmit={this.props.resetPassword.bind(this)}/>
+          </div>
+        }
+        { !this.props.resetTokenError && this.props.resetPasswordSuccess &&
+          <div className={RPSStyles['forgot-password-success-wrapper']}>
+            <h3>You have successfully reset your password. Go <Link to="/login">Login</Link></h3>
           </div>
         }
       </div>
@@ -45,11 +54,13 @@ ResetPassword.propTypes = {
   ]),
   resetTokenError: PropTypes.bool,
   params: PropTypes.object,
-  user: PropTypes.object
+  user: PropTypes.object,
+  resetPasswordSuccess: PropTypes.bool
 };
 
 const mapStateToProps = (state) => {
   return {
+    resetPasswordSuccess: state.auth.resetPasswordSuccess,
     userResetEmail: state.auth.ResetPassword,
     resetTokenError: state.auth.resetTokenError,
     error: state.auth.error,
