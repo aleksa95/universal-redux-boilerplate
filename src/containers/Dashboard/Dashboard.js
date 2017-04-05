@@ -2,11 +2,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+const DStyles = require('./dashboard.scss');
+
 class Dashboard extends Component {
   render() {
     return (
-      <div>
-        LOGGED INTO DASHBOARD
+      <div className={DStyles['dashboard-wrapper']}>
+        <h3>LOGGED INTO DASHBOARD</h3>
       </div>
     );
   }
