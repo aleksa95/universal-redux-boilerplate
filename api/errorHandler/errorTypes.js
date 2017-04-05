@@ -16,6 +16,10 @@ const ERROR_TYPES = {
     CHECK_TOKEN: {
       NOT_VALID: 'user.check_token.not_valid'
     },
+    RESET_PASSWORD: {
+      NO_USER: 'user.reset_password.no-user',
+      NO_MATCH: 'user.reset_password.no-match'
+    },
     FAILED_AUTHENTICATION: 'user.failed-authentication',
     INVALID_TOKEN: 'user.invalid-token',
     ROLE_MISMATCH: 'user.role-mismatch'

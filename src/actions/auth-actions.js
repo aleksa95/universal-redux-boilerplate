@@ -4,6 +4,7 @@ import cookie from 'react-cookie';
 import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
   LOGOUT, LOGOUT_SUCCESS,
+  FORGOT_PASSWORD, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILED,
   RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILED,
   CHECK_RESET_TOKEN, CHECK_RESET_TOKEN_SUCCESS, CHECK_RESET_TOKEN_FAILED,
   AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED } from './types';
@@ -179,16 +180,16 @@ const authFormsValidator = values => {
 
 const forgotPassword = ({ email }) => {
   return (dispatch) => {
-    dispatch({type: RESET_PASSWORD, payload: { email }});
+    dispatch({type: FORGOT_PASSWORD, payload: { email }});
 
     return axios.post(`${API_URL}/auth/forgot-password`, { email })
       .then(() => {
-        dispatch({ type: RESET_PASSWORD_SUCCESS, payload: email });
+        dispatch({ type: FORGOT_PASSWORD_SUCCESS, payload: email });
         dispatch(push('/forgot-password-success'));
       })
       .catch((error) => {
         if (!error) return;
-        errorHandler(dispatch, error.response, RESET_PASSWORD_FAILED);
+        errorHandler(dispatch, error.response, FORGOT_PASSWORD_FAILED);
         const formField = error.response.data.type;
         let submissionError = {}; // eslint-disable-line
         submissionError[formField] = error.response.data.error;
@@ -214,8 +215,26 @@ const checkIfResetPasswordTokenIsValid = ({ token }) => {
   };
 };
 
-const resetPassword = ({}) => {
-  console.log('DAS');
+const resetPassword = ({ userId, currentPassword, newPassword }) => {
+  console.log('RESET', userId);
+  return (dispatch) => {
+    dispatch({type: RESET_PASSWORD, payload: { userId }});
+
+    return axios.post(`${API_URL}/auth/reset-password`, { userId, currentPassword, newPassword })
+      .then(() => {
+        dispatch({ type: RESET_PASSWORD_SUCCESS });
+      })
+      .catch((error) => {
+        if (!error) return;
+
+        errorHandler(dispatch, error.response, RESET_PASSWORD_FAILED);
+        const formField = error.response.data.type;
+        let submissionError = {}; // eslint-disable-line
+        submissionError[formField] = error.response.data.error;
+        submissionError._error = error.response.data.error;
+        throw new SubmissionError(submissionError);
+      });
+  };
 };
 
 /**

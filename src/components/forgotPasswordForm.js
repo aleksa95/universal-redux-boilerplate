@@ -11,7 +11,7 @@ let ForgotPasswordForm = ({ handleSubmit, pristine, submitting, invalid }) => ( 
            inputClassName={FPFStyles['authentication-form-input']}
            errorClassName={FPFStyles['authentication-form-error']}/>
 
-    <button type="submit" disabled={pristine || submitting || invalid}>Reset</button>
+    <button type="submit" disabled={pristine || submitting || invalid}>Submit</button>
   </form>
 );
 

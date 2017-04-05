@@ -14,6 +14,10 @@ export const AUTHENTICATE = 'authenticate_user';
 export const AUTHENTICATION_SUCCESS = 'authenticate_user_success';
 export const AUTHENTICATION_FAILED = 'authenticate_user_failed';
 
+export const FORGOT_PASSWORD = 'forgot_password';
+export const FORGOT_PASSWORD_SUCCESS = 'forgot_password_success';
+export const FORGOT_PASSWORD_FAILED = 'forgot_password_failed';
+
 export const RESET_PASSWORD = 'reset_password';
 export const RESET_PASSWORD_SUCCESS = 'reset_password_success';
 export const RESET_PASSWORD_FAILED = 'reset_password_failed';

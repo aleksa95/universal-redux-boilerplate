@@ -154,6 +154,56 @@ exports.checkResetToken = (req, res, next) => {
   });
 };
 
+exports.resetPassword = (req, res, next) => {
+  const userId = req.body.userId,
+        currentPassword = req.body.currentPassword,
+        newPassword = req.body.newPassword;
+
+  waterfall([
+    function(done) {
+      User.findOne({ _id: userId }, function(err, user) {
+        if (!user) return errorHandler(ERROR_TYPES.USER.RESET_PASSWORD.NO_USER, res);
+
+        user.comparePassword(currentPassword, function(err, isMatch) {
+          if (err) return done(err);
+
+          if (!isMatch) return errorHandler(ERROR_TYPES.USER.RESET_PASSWORD.NO_MATCH, res);
+
+          user.password = newPassword;
+          user.resetPasswordToken = undefined;
+          user.resetPasswordExpires = undefined;
+
+          user.save(function(err) {
+            done(err, user);
+          });
+        });
+      });
+    },
+    function(user, done) {
+      var smtpTransport = nodemailer.createTransport({
+        service: 'SendGrid',
+        auth: {
+          user: 'quincygod',
+          pass: 'Kikiriki1'
+        }
+      });
+      var mailOptions = {
+        to: user.email,
+        from: 'passwordreset@demo.com',
+        subject: 'Your password has been changed',
+        text: 'Hello,\n\n' +
+        'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+      };
+      smtpTransport.sendMail(mailOptions, function(err) {
+        res.sendStatus(200);
+        done(err);
+      });
+    }
+  ], function(err) {
+    console.log('RESET_ERROR', err);
+  });
+};
+
 /**
  * Checks if token is present in request
  * @param req

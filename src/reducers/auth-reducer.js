@@ -1,6 +1,7 @@
 import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
   LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILED,
+  FORGOT_PASSWORD, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILED,
   RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILED,
   CHECK_RESET_TOKEN, CHECK_RESET_TOKEN_SUCCESS, CHECK_RESET_TOKEN_FAILED,
   AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED } from '../actions/types';
@@ -17,7 +18,9 @@ const INITIAL_STATE = {
   resetTokenError: false,
   userResetEmail: '',
   resetPassUser: {},
-  user: {}
+  user: {},
+  forgotPasswordOngoing: false,
+  userIdResetPassword: ''
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -43,8 +46,15 @@ export default function(state = INITIAL_STATE, action) {
     case LOGOUT_FAILED:
       return {...state, loggingOut: false, authenticated: true, error: action.payload };
 
+    case FORGOT_PASSWORD:
+      return {...state, forgotPasswordOngoing: true, userResetEmail: action.payload.email };
+    case FORGOT_PASSWORD_SUCCESS:
+      return {...state, forgotPasswordOngoing: false, error: false };
+    case FORGOT_PASSWORD_FAILED:
+      return {...state, forgotPasswordOngoing: false, error: action.payload };
+
     case RESET_PASSWORD:
-      return {...state, resettingPassword: true, userResetEmail: action.payload.email };
+      return {...state, resettingPassword: true, userIdResetPassword: action.payload.userId };
     case RESET_PASSWORD_SUCCESS:
       return {...state, resettingPassword: false, error: false };
     case RESET_PASSWORD_FAILED:

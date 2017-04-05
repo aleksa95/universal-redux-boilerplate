@@ -38,6 +38,12 @@ const errorHandler = function (ERROR_TYPE, res, message) {
 
     case ERROR_TYPES.USER.CHECK_TOKEN.NOT_VALID:
       return res.status(422).send({ type: 'token', error: 'Password reset token is invalid or has expired.' });
+
+    case ERROR_TYPES.USER.RESET_PASSWORD.NO_USER:
+      return res.status(422).send({ type: 'user', error: 'There is no user with that ID'});
+
+    case ERROR_TYPES.USER.RESET_PASSWORD.NO_MATCH:
+      return res.status(422).send({ type: 'currentPassword', error: "The submitted current password is not valid"});
   }
 };
 
