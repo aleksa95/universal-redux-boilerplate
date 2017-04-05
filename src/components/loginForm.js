@@ -18,7 +18,13 @@ let LoginForm = ({ handleSubmit, pristine, submitting, invalid }) => ( // eslint
            wrapperClassName={LGFStyles['authentication-form-input-group']}
            inputClassName={LGFStyles['authentication-form-input']}
            errorClassName={LGFStyles['authentication-form-error']}/>
-    <div className="forgot-password-wrapper">
+
+    <div className={LGFStyles['forgot-password-wrapper']}>
+      <Field name="rememberMe" component={formGroup} type="checkbox"
+             showLabel="true" labelText="Remember me" id="rememberMe"
+             wrapperClassName={LGFStyles['authentication-form-remember-me-wrapper']}
+             inputClassName={LGFStyles['authentication-form-checkbox']}/>
+
       <Link to="/forgot-password">Forgot password?</Link>
     </div>
     <button type="submit" disabled={pristine || submitting || invalid}>Submit</button>

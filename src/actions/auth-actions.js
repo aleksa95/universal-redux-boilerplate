@@ -62,13 +62,14 @@ function errorHandler(dispatch, error, type) {
  * Logs in user
  * @param email
  * @param password
+ * @param rememberMe
  * @returns {function(*=)}
  */
-function loginUser({ email, password }) {
+function loginUser({ email, password, rememberMe }) {
   return (dispatch) => {
     dispatch({type: LOGIN, payload: {email, password}});
 
-    return axios.post(`${API_URL}/auth/login`, { email, password })
+    return axios.post(`${API_URL}/auth/login`, { email, password, rememberMe })
       .then(response => {
         setNewToken(response.data.token);
         dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });

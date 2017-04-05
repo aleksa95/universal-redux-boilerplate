@@ -12,11 +12,11 @@ import passportConfig from '../../config/passport'; // eslint-disable-line
 /**
  * Create JWT token with user information and secret key
  * @param user
- * @param setExpire
+ * @param rememberMe
  * @returns {object}
  */
-const generateToken = (user, setExpire) => {
-  var jwtConfig = setExpire ? { expiresIn: '24h'} : {};
+const generateToken = (user, rememberMe) => {
+  var jwtConfig = rememberMe ? { expiresIn: '31d'} : { expiresIn: '24h'};
   return 'JWT ' + jwt.sign(user, config.secret, jwtConfig);
 };
 
@@ -83,7 +83,7 @@ exports.signUp = (req, res, next) => {
       let userInfo = setUserInfo(user);
 
       res.status(201).json({
-        token: generateToken(userInfo, true),
+        token: generateToken(userInfo),
         user: userInfo
       });
     });
@@ -224,12 +224,13 @@ exports.authenticate = (req, res) => {
   if (!token) return errorHandler(ERROR_TYPES.USER.FAILED_AUTHENTICATION, res);
 
   jwt.verify(token, config.secret, (err, user) => {
+
     if (err) return errorHandler(ERROR_TYPES.USER.INVALID_TOKEN, res, err);
 
     let userInfo = setUserInfo(user);
 
     res.status(200).json({
-      token: generateToken(userInfo, true),
+      token: generateToken(userInfo),
       user: userInfo
     });
   });
