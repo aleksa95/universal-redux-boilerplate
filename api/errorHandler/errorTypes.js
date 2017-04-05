@@ -9,6 +9,10 @@ const ERROR_TYPES = {
       NON_EXISTING_EMAIL: 'user.login.non-existing-email',
       NO_MATCH: 'user.login.no-match'
     },
+    FORGOT_PASSWORD: {
+      NO_EMAIL: 'user.forgot-password.no-email',
+      NON_EXISTING_EMAIL: 'user.forgot-password.no-match'
+    },
     FAILED_AUTHENTICATION: 'user.failed-authentication',
     INVALID_TOKEN: 'user.invalid-token',
     ROLE_MISMATCH: 'user.role-mismatch'

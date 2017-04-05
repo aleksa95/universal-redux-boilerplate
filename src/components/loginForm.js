@@ -1,21 +1,26 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import formGroup from './authenticationFormGroup';
+import { Link } from 'react-router';
+import classNames from 'classnames';
 import { authFormsValidator } from '../actions/auth-actions';
 
-const styles = require('../containers/Authentication/_authentication.scss');
+const LGFStyles = require('../containers/Authentication/_authentication.scss');
 
 let LoginForm = ({ handleSubmit, pristine, submitting, invalid }) => ( // eslint-disable-line
-  <form className={styles['authentication-form']} onSubmit={handleSubmit}>
+  <form className={classNames(LGFStyles['authentication-form'], 'login-form')} onSubmit={handleSubmit}>
     <Field name="email" component={formGroup} placeholder="Email" type="text"
-           wrapperClassName={styles['authentication-form-input-group']}
-           inputClassName={styles['authentication-form-input']}
-           errorClassName={styles['authentication-form-error']}/>
+           wrapperClassName={LGFStyles['authentication-form-input-group']}
+           inputClassName={LGFStyles['authentication-form-input']}
+           errorClassName={LGFStyles['authentication-form-error']}/>
 
     <Field name="password" component={formGroup} placeholder="Password" type="password"
-           wrapperClassName={styles['authentication-form-input-group']}
-           inputClassName={styles['authentication-form-input']}
-           errorClassName={styles['authentication-form-error']}/>
+           wrapperClassName={LGFStyles['authentication-form-input-group']}
+           inputClassName={LGFStyles['authentication-form-input']}
+           errorClassName={LGFStyles['authentication-form-error']}/>
+    <div className="forgot-password-wrapper">
+      <Link to="/forgot-password">Forgot password?</Link>
+    </div>
     <button type="submit" disabled={pristine || submitting || invalid}>Submit</button>
   </form>
 );

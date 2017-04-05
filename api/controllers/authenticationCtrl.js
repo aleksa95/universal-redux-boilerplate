@@ -89,6 +89,21 @@ exports.signUp = function(req, res, next) {
   });
 };
 
+exports.resetPassword = function (req, res) {
+  const email = req.body.email;
+
+  if (!email) return errorHandler(ERROR_TYPES.USER.FORGOT_PASSWORD.NO_EMAIL, res);
+
+  User.findOne({ email: email }, function(err, user) {
+    if (err) { return next(err); }
+
+    if (!user) return errorHandler(ERROR_TYPES.USER.FORGOT_PASSWORD.NON_EXISTING_EMAIL, res);
+
+
+    res.send(200);
+  });
+};
+
 /**
  * Checks if token is present in request
  * @param req

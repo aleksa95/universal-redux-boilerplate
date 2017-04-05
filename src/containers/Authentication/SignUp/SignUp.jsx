@@ -1,24 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import SignUpForm from '../../../components/loginForm';
+import SignUpForm from '../../../components/singUpForm';
 import { signUpUser } from '../../../actions/auth-actions';
 
-class SignUp extends React.Component {
-  submit(values) {
-    return this.props.signUpUser(values);
-  }
+const SGUStyles = require('../_authentication.scss');
 
-  render() {
-    const styles = require('../_authentication.scss');
-
-    return (
-      <div className={styles['authentication-wrapper']}>
-        <div className={styles['authentication-title']}>Sign Up Page</div>
-        <SignUpForm onSubmit={this.submit.bind(this)} />
-      </div>
-    );
-  }
-}
+const SignUp = ({ signUpUser }) => (
+  <div className={SGUStyles['authentication-wrapper']}>
+    <div className={SGUStyles['authentication-title']}>Sign Up Page</div>
+    <SignUpForm onSubmit={ signUpUser } />
+  </div>
+);
 
 SignUp.propTypes = {
   signUpUser: React.PropTypes.func,

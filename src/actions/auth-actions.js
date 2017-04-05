@@ -4,7 +4,8 @@ import cookie from 'react-cookie';
 import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
   LOGOUT, LOGOUT_SUCCESS,
-  AUTHENTICATE, AUTHENTICATATION_SUCCESS, AUTHENTICATATION_FAILED} from './types';
+  RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILED,
+  AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED } from './types';
 import { SubmissionError } from 'redux-form';
 import { push } from 'react-router-redux';
 
@@ -124,7 +125,7 @@ function checkAuth(token) {
 
     if (!isTokenPresent) {
       dispatch({
-        type: AUTHENTICATATION_FAILED, payload: 'Token is not present'
+        type: AUTHENTICATION_FAILED, payload: 'Token is not present'
       });
       return;
     }
@@ -132,14 +133,14 @@ function checkAuth(token) {
     axios.get(`${API_URL}/auth/authenticate`, config).then(response => {
       setNewToken(response.data.token);
       dispatch({
-        type: AUTHENTICATATION_SUCCESS,
+        type: AUTHENTICATION_SUCCESS,
         payload: response.data.user
       });
     }).catch((error) => {
       if (cookie.load('token')) cookie.remove('token', { path: '/' });
 
       dispatch({
-        type: AUTHENTICATATION_FAILED,
+        type: AUTHENTICATION_FAILED,
         payload: error.message
       });
     });
@@ -175,6 +176,29 @@ const authFormsValidator = values => {
   return errors;
 };
 
+const resetPassword = ({ email }) => {
+  return (dispatch) => {
+    dispatch({type: RESET_PASSWORD, payload: { email }});
+
+    return axios.post(`${API_URL}/auth/reset-password`, { email })
+      .then(() => {
+        console.log('dsadas');
+        dispatch({ type: RESET_PASSWORD_SUCCESS, payload: email });
+        dispatch(push('/reset-password-success'));
+      })
+      .catch((error) => {
+        console.log('dsadas');
+        if (!error) return;
+        errorHandler(dispatch, error.response, RESET_PASSWORD_FAILED);
+        const formField = error.response.data.type;
+        let submissionError = {}; // eslint-disable-line
+        submissionError[formField] = error.response.data.error;
+        submissionError._error = error.response.data.error;
+        throw new SubmissionError(submissionError);
+      });
+  };
+};
+
 /**
  * TEST
  * @param user
@@ -191,5 +215,5 @@ function test(user) { // eslint-disable-line
 }
 
 module.exports = {
-  logoutUser, loginUser, checkAuth, signUpUser, redirect, authFormsValidator
+  logoutUser, loginUser, checkAuth, signUpUser, redirect, authFormsValidator, resetPassword
 };

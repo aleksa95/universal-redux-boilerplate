@@ -3,22 +3,14 @@ import { connect } from 'react-redux';
 import LoginForm from '../../../components/loginForm';
 import { loginUser } from '../../../actions/auth-actions';
 
-class Login extends React.Component {
-  submit(values) {
-    return this.props.loginUser(values);
-  }
+const LGStyles = require('../_authentication.scss');
 
-  render() {
-    const styles = require('../_authentication.scss');
-
-    return (
-      <div className={styles['authentication-wrapper']}>
-        <div className={styles['authentication-title']}>Login</div>
-        <LoginForm onSubmit={this.submit.bind(this)} />
-      </div>
-    );
-  }
-}
+const Login = ({ loginUser }) => (
+  <div className={LGStyles['authentication-wrapper']}>
+    <div className={LGStyles['authentication-title']}>Login</div>
+    <LoginForm onSubmit={ loginUser } />
+  </div>
+);
 
 Login.propTypes = {
   loginUser: React.PropTypes.func,

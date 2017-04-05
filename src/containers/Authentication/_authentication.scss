@@ -15,6 +15,12 @@
     min-width: 350px;
     max-width: 350px;
 
+    &.login-form {
+      button {
+        margin-top: 25px;
+      }
+    }
+
     .authentication-form-input-group {
       position: relative;
 
@@ -61,7 +67,16 @@
       &:disabled {
         user-select: none;
         cursor: not-allowed;
-        background: #fff;
+        background: #f0f0f0;
+      }
+    }
+
+    .forgot-password-wrapper {
+      margin-top: 20px;
+      color: #48a8ef;
+
+      &:hover {
+        color: lighten(#48a8ef, 10);
       }
     }
   }

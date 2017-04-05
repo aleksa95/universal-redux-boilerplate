@@ -29,6 +29,12 @@ const errorHandler = function (ERROR_TYPE, res, message) {
 
     case ERROR_TYPES.USER.ROLE_MISMATCH:
       return res.status(401).json({message: 'Role mismatch'});
+
+    case ERROR_TYPES.USER.FORGOT_PASSWORD.NO_EMAIL:
+      return res.status(422).send({ error: 'You must enter an email address.', type: 'email'});
+
+    case ERROR_TYPES.USER.FORGOT_PASSWORD.NON_EXISTING_EMAIL:
+      return res.status(422).send({ type: 'email', error: 'There is no user registered with that email.' });
   }
 };
 
