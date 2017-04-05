@@ -153,7 +153,7 @@ function checkAuth(token) {
  * @returns {function(*, *)}
  */
 function redirect(route) {
-  return function(dispatch) {
+  return (dispatch) => {
     dispatch(push(route));
   };
 }
@@ -182,12 +182,10 @@ const resetPassword = ({ email }) => {
 
     return axios.post(`${API_URL}/auth/reset-password`, { email })
       .then(() => {
-        console.log('dsadas');
         dispatch({ type: RESET_PASSWORD_SUCCESS, payload: email });
-        dispatch(push('/reset-password-success'));
+        dispatch(push('/forgot-password-success'));
       })
       .catch((error) => {
-        console.log('dsadas');
         if (!error) return;
         errorHandler(dispatch, error.response, RESET_PASSWORD_FAILED);
         const formField = error.response.data.type;

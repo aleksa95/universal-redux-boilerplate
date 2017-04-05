@@ -40,6 +40,7 @@
     "webpack-hot-middleware": "^2.5.0"
   },
   "dependencies": {
+    "async": "^2.3.0",
     "autoprefixer": "^6.5.0",
     "autoprefixer-loader": "^3.2.0",
     "axios": "^0.15.3",
@@ -65,6 +66,7 @@
     "mongoose": "^4.8.5",
     "morgan": "^1.8.1",
     "node-sass": "^4.5.0",
+    "nodemailer": "^3.1.8",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",

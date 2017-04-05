@@ -7,6 +7,8 @@ export DevTools from './DevTools/DevTools';
 export Login from './Authentication/Login/Login';
 export SignUp from './Authentication/SignUp/SignUp';
 export ForgotPassword from './Authentication/ForgotPassword/ForgotPassword';
+export ForgotPasswordSuccess from './Authentication/ForgotPassword/ForgotPasswordSuccess';
+export ResetPassword from './Authentication/ResetPassword/ResetPassword';
 export EnsureAuthentication from './EnsureAuthentication/EnsureAuthentication';
 
 // Dashboard

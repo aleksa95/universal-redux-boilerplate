@@ -11,6 +11,7 @@ export default class Default extends Component {
           <html lang="en">
           <head>
               <title>Title</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" id="viewport-element"/>
               {Object.keys(assets.styles).map((style, key) =>
                   <link href={assets.styles[style]} key={key} media="screen, projection"
                         rel="stylesheet" type="text/css" charSet="UTF-8"/>
