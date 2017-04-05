@@ -13,6 +13,9 @@ const ERROR_TYPES = {
       NO_EMAIL: 'user.forgot-password.no-email',
       NON_EXISTING_EMAIL: 'user.forgot-password.no-match'
     },
+    CHECK_TOKEN: {
+      NOT_VALID: 'user.check_token.not_valid'
+    },
     FAILED_AUTHENTICATION: 'user.failed-authentication',
     INVALID_TOKEN: 'user.invalid-token',
     ROLE_MISMATCH: 'user.role-mismatch'

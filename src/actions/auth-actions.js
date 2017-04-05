@@ -5,6 +5,7 @@ import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
   LOGOUT, LOGOUT_SUCCESS,
   RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILED,
+  CHECK_RESET_TOKEN, CHECK_RESET_TOKEN_SUCCESS, CHECK_RESET_TOKEN_FAILED,
   AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED } from './types';
 import { SubmissionError } from 'redux-form';
 import { push } from 'react-router-redux';
@@ -34,7 +35,7 @@ function setNewToken(token) {
 function errorHandler(dispatch, error, type) {
   let errorMessage = '';
 
-  if (error.data.error) {
+  if (error.data && error.data.error) {
     errorMessage = error.data.error;
   } else if (error.data) {
     errorMessage = error.data;
@@ -176,11 +177,11 @@ const authFormsValidator = values => {
   return errors;
 };
 
-const resetPassword = ({ email }) => {
+const forgotPassword = ({ email }) => {
   return (dispatch) => {
     dispatch({type: RESET_PASSWORD, payload: { email }});
 
-    return axios.post(`${API_URL}/auth/reset-password`, { email })
+    return axios.post(`${API_URL}/auth/forgot-password`, { email })
       .then(() => {
         dispatch({ type: RESET_PASSWORD_SUCCESS, payload: email });
         dispatch(push('/forgot-password-success'));
@@ -195,6 +196,26 @@ const resetPassword = ({ email }) => {
         throw new SubmissionError(submissionError);
       });
   };
+};
+
+const checkIfResetPasswordTokenIsValid = ({ token }) => {
+  return (dispatch) => {
+    dispatch({type: CHECK_RESET_TOKEN, payload: { token }});
+
+    return axios.post(`${API_URL}/auth/check-reset-token`, { token })
+      .then(response => {
+        dispatch({ type: CHECK_RESET_TOKEN_SUCCESS, payload: response.data.user });
+      })
+      .catch((error) => {
+        if (!error) return;
+
+        errorHandler(dispatch, error.response, CHECK_RESET_TOKEN_FAILED);
+      });
+  };
+};
+
+const resetPassword = ({}) => {
+  console.log('DAS');
 };
 
 /**
@@ -213,5 +234,6 @@ function test(user) { // eslint-disable-line
 }
 
 module.exports = {
-  logoutUser, loginUser, checkAuth, signUpUser, redirect, authFormsValidator, resetPassword
+  logoutUser, loginUser, checkAuth, signUpUser, redirect, authFormsValidator, forgotPassword,
+  checkIfResetPasswordTokenIsValid, resetPassword
 };

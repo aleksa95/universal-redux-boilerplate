@@ -2,6 +2,7 @@ import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
   LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILED,
   RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILED,
+  CHECK_RESET_TOKEN, CHECK_RESET_TOKEN_SUCCESS, CHECK_RESET_TOKEN_FAILED,
   AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -11,7 +12,11 @@ const INITIAL_STATE = {
   signingIn: false,
   loggingIn: false,
   loggingOut: false,
+  checkingResetToken: false,
+  resetToken: '',
+  resetTokenError: false,
   userResetEmail: '',
+  resetPassUser: {},
   user: {}
 };
 
@@ -44,6 +49,13 @@ export default function(state = INITIAL_STATE, action) {
       return {...state, resettingPassword: false, error: false };
     case RESET_PASSWORD_FAILED:
       return {...state, resettingPassword: false, error: action.payload };
+
+    case CHECK_RESET_TOKEN:
+      return {...state, checkingResetToken: true, resetToken: action.payload.token };
+    case CHECK_RESET_TOKEN_SUCCESS:
+      return {...state, checkingResetToken: false, error: false, resetPassUser: action.payload };
+    case CHECK_RESET_TOKEN_FAILED:
+      return {...state, checkingResetToken: false, error: action.payload, resetTokenError: true };
 
     case AUTHENTICATE:
       return {...state, authenticating: true, user: action.payload };

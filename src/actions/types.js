@@ -18,3 +18,6 @@ export const RESET_PASSWORD = 'reset_password';
 export const RESET_PASSWORD_SUCCESS = 'reset_password_success';
 export const RESET_PASSWORD_FAILED = 'reset_password_failed';
 
+export const CHECK_RESET_TOKEN = 'check_reset_token';
+export const CHECK_RESET_TOKEN_SUCCESS = 'check_reset_token_success';
+export const CHECK_RESET_TOKEN_FAILED = 'check_reset_token_failed';

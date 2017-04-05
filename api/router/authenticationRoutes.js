@@ -1,5 +1,5 @@
 import express from 'express';
-import { signUp, login, authenticate, resetPassword } from '../controllers/authenticationCtrl';
+import { signUp, login, authenticate, forgotPassword, checkResetToken } from '../controllers/authenticationCtrl';
 
 const authRoutes = express.Router();
 
@@ -7,7 +7,9 @@ authRoutes.post('/sign-up', signUp);
 
 authRoutes.post('/login', login);
 
-authRoutes.post('/reset-password', resetPassword);
+authRoutes.post('/forgot-password', forgotPassword);
+
+authRoutes.post('/check-reset-token', checkResetToken);
 
 authRoutes.get('/authenticate', authenticate);
 

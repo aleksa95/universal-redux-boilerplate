@@ -92,7 +92,7 @@ exports.signUp = function(req, res, next) {
   });
 };
 
-exports.resetPassword = function (req, res, next) {
+exports.forgotPassword = function (req, res, next) {
   const email = req.body.email;
 
   if (!email) return errorHandler(ERROR_TYPES.USER.FORGOT_PASSWORD.NO_EMAIL, res);
@@ -143,6 +143,14 @@ exports.resetPassword = function (req, res, next) {
   ], function(err, message) {
     console.log(err, message);
     if (err) return next(err);
+  });
+};
+
+exports.checkResetToken = (req, res, next) => {
+  User.findOne({ resetPasswordToken: req.body.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
+    if (!user) return errorHandler(ERROR_TYPES.USER.CHECK_TOKEN.NOT_VALID, res);
+
+    res.status(200).json({user: setUserInfo(user)});
   });
 };
 

@@ -35,6 +35,9 @@ const errorHandler = function (ERROR_TYPE, res, message) {
 
     case ERROR_TYPES.USER.FORGOT_PASSWORD.NON_EXISTING_EMAIL:
       return res.status(422).send({ type: 'email', error: 'There is no user registered with that email.' });
+
+    case ERROR_TYPES.USER.CHECK_TOKEN.NOT_VALID:
+      return res.status(422).send({ type: 'token', error: 'Password reset token is invalid or has expired.' });
   }
 };
 
