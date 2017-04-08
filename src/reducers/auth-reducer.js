@@ -1,16 +1,19 @@
-import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
+import {
+  SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED, DISMISS_SIGN_UP_ERROR,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
   LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILED,
   FORGOT_PASSWORD, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILED,
   RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILED,
   CHECK_RESET_TOKEN, CHECK_RESET_TOKEN_SUCCESS, CHECK_RESET_TOKEN_FAILED,
-  AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED } from '../actions/types';
+  AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED
+} from '../actions/types';
 
 const INITIAL_STATE = {
   error: '',
   authenticated: false,
   authenticating: false,
   signingIn: false,
+  signUpError: false,
   loggingIn: false,
   loggingOut: false,
   checkingResetToken: false,
@@ -29,9 +32,11 @@ export default function(state = INITIAL_STATE, action) {
     case SIGN_UP:
       return {...state, signingIn: true, user: action.payload };
     case SIGN_UP_SUCCESS:
-      return {...state, signingIn: false, authenticated: true, user: action.payload, error: false };
+      return {...state, signingIn: false, signUpError: false, authenticated: true, user: action.payload, error: false };
     case SIGN_UP_FAILED:
-      return {...state, signingIn: false, authenticated: false, error: action.payload };
+      return {...state, signingIn: false, signUpError: true, authenticated: false, error: action.payload };
+    case DISMISS_SIGN_UP_ERROR:
+      return {...state, signUpError: false };
 
     case LOGIN:
       return {...state, loggingIn: true, user: action.payload };

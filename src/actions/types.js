@@ -1,6 +1,7 @@
 export const SIGN_UP = 'sign_in';
 export const SIGN_UP_SUCCESS = 'sign_in_success';
 export const SIGN_UP_FAILED = 'sign_in_failed';
+export const DISMISS_SIGN_UP_ERROR = 'dismiss_sign_up_error';
 
 export const LOGIN = 'login_user';
 export const LOGIN_SUCCESS = 'login_success';

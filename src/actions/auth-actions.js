@@ -1,13 +1,15 @@
 import { apiHost, apiPort } from '../../config/env';
 import axios from 'axios';
 import cookie from 'react-cookie';
-import { SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED,
+import {
+  SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED, DISMISS_SIGN_UP_ERROR,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
   LOGOUT, LOGOUT_SUCCESS,
   FORGOT_PASSWORD, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILED,
   RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILED,
   CHECK_RESET_TOKEN, CHECK_RESET_TOKEN_SUCCESS, CHECK_RESET_TOKEN_FAILED,
-  AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED } from './types';
+  AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED
+} from './types';
 import { SubmissionError } from 'redux-form';
 import { push } from 'react-router-redux';
 
@@ -38,6 +40,8 @@ function errorHandler(dispatch, error, type) {
 
   if (error.data && error.data.error) {
     errorMessage = error.data.error;
+  } else if (error.data && error.data.message) {
+    errorMessage = error.data.message;
   } else if (error.data) {
     errorMessage = error.data;
   } else {
@@ -106,6 +110,13 @@ function signUpUser({ email, password }) {
       response = await axios.post(`${API_URL}/auth/sign-up`, { email, password });
     } catch (error) {
       errorHandler(dispatch, error.response, SIGN_UP_FAILED);
+
+      if (error.response.status === 429) {
+        setTimeout(() => {
+          dispatch({ type: DISMISS_SIGN_UP_ERROR});
+        }, 15000);
+      }
+
       const formField = error.response.data.type;
       let submissionError = {}; // eslint-disable-line
       submissionError[formField] = error.response.data.error;

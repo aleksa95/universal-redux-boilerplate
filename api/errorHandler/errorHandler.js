@@ -3,6 +3,7 @@ import ERROR_TYPES from './errorTypes';
 // 401 - Unauthorized
 // 403 - Forbidden
 // 422 - Unprocessed Entity
+// 429 - Too Many Requests
 
 const errorHandler = function (ERROR_TYPE, res, message) {
   switch (ERROR_TYPE) {

@@ -18,6 +18,9 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Credentials");
   res.header("Access-Control-Allow-Credentials", "true");
+  res.header("X-Frame-Options", "DENY");
+  res.header("X-XSS-Protection", "1; mode=block");
+  res.header("X-Content-Type-Options", "nosniff");
   next();
 });
 
