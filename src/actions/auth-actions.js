@@ -66,24 +66,27 @@ function errorHandler(dispatch, error, type) {
  * @returns {function(*=)}
  */
 function loginUser({ email, password, rememberMe }) {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({type: LOGIN, payload: {email, password}});
 
-    return axios.post(`${API_URL}/auth/login`, { email, password, rememberMe })
-      .then(response => {
-        setNewToken(response.data.token);
-        dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });
-        dispatch(push('/dashboard'));
-      })
-      .catch((error) => {
-        if (!error) return;
-        errorHandler(dispatch, error.response, LOGIN_FAILED);
-        const formField = error.response.data.type;
-        let submissionError = {}; // eslint-disable-line
-        submissionError[formField] = error.response.data.error;
-        submissionError._error = error.response.data.error;
-        throw new SubmissionError(submissionError);
-      });
+    let response;
+
+    try {
+      response = await axios.post(`${API_URL}/auth/login`, { email, password, rememberMe });
+    } catch (error) {
+      errorHandler(dispatch, error.response, LOGIN_FAILED);
+      const formField = error.response.data.type;
+      let submissionError = {}; // eslint-disable-line
+      submissionError[formField] = error.response.data.error;
+      submissionError._error = error.response.data.error;
+      throw new SubmissionError(submissionError);
+    }
+
+    setNewToken(response.data.token);
+    dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });
+    dispatch(push('/dashboard'));
+
+    return response;
   };
 }
 
@@ -94,23 +97,27 @@ function loginUser({ email, password, rememberMe }) {
  * @returns {function(*=)}
  */
 function signUpUser({ email, password }) {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({type: SIGN_UP, payload: {email, password}});
 
-    return axios.post(`${API_URL}/auth/sign-up`, { email, password })
-      .then(response => {
-        setNewToken(response.data.token);
-        dispatch({ type: SIGN_UP_SUCCESS, payload: response.data.user });
-        dispatch(push('/dashboard'));
-      })
-      .catch((error) => {
-        errorHandler(dispatch, error.response, SIGN_UP_FAILED);
-        const formField = error.response.data.type;
-        let submissionError = {}; // eslint-disable-line
-        submissionError[formField] = error.response.data.error;
-        submissionError._error = error.response.data.error;
-        throw new SubmissionError(submissionError);
-      });
+    let response;
+
+    try {
+      response = await axios.post(`${API_URL}/auth/sign-up`, { email, password });
+    } catch (error) {
+      errorHandler(dispatch, error.response, SIGN_UP_FAILED);
+      const formField = error.response.data.type;
+      let submissionError = {}; // eslint-disable-line
+      submissionError[formField] = error.response.data.error;
+      submissionError._error = error.response.data.error;
+      throw new SubmissionError(submissionError);
+    }
+
+    setNewToken(response.data.token);
+    dispatch({ type: SIGN_UP_SUCCESS, payload: response.data.user });
+    dispatch(push('/dashboard'));
+
+    return response;
   };
 }
 
@@ -120,33 +127,37 @@ function signUpUser({ email, password }) {
  * @returns {function(*, *)}
  */
 function checkAuth(token) {
-  return (dispatch, getStore) => {
+  return async (dispatch, getStore) => {
     const isTokenPresent = !!token;
     const config = { headers: { 'Authorization': cookie.load('token') }};
 
     dispatch({type: AUTHENTICATE, payload: getStore().auth.user});
 
     if (!isTokenPresent) {
-      dispatch({
-        type: AUTHENTICATION_FAILED, payload: 'Token is not present'
-      });
-      return;
+      dispatch({ type: AUTHENTICATION_FAILED, payload: 'Token is not present' });
+      return false;
     }
 
-    axios.get(`${API_URL}/auth/authenticate`, config).then(response => {
-      setNewToken(response.data.token);
-      dispatch({
-        type: AUTHENTICATION_SUCCESS,
-        payload: response.data.user
-      });
-    }).catch((error) => {
+    let response;
+
+    try {
+      response = await axios.get(`${API_URL}/auth/authenticate`, config);
+    } catch (error) {
       if (cookie.load('token')) cookie.remove('token', { path: '/' });
 
       dispatch({
         type: AUTHENTICATION_FAILED,
         payload: error.message
       });
+    }
+
+    setNewToken(response.data.token);
+    dispatch({
+      type: AUTHENTICATION_SUCCESS,
+      payload: response.data.user
     });
+
+    return response;
   };
 }
 
@@ -179,62 +190,88 @@ const authFormsValidator = values => {
   return errors;
 };
 
+/**
+ * Sends request to send forgot password email
+ *
+ * @param email
+ * @returns {function(*=)}
+ */
 const forgotPassword = ({ email }) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({type: FORGOT_PASSWORD, payload: { email }});
 
-    return axios.post(`${API_URL}/auth/forgot-password`, { email })
-      .then(() => {
-        dispatch({ type: FORGOT_PASSWORD_SUCCESS, payload: email });
-        dispatch(push('/forgot-password-success'));
-      })
-      .catch((error) => {
-        if (!error) return;
-        errorHandler(dispatch, error.response, FORGOT_PASSWORD_FAILED);
-        const formField = error.response.data.type;
-        let submissionError = {}; // eslint-disable-line
-        submissionError[formField] = error.response.data.error;
-        submissionError._error = error.response.data.error;
-        throw new SubmissionError(submissionError);
-      });
+    let response;
+
+    try {
+      response = await axios.post(`${API_URL}/auth/forgot-password`, { email });
+    } catch (error) {
+      errorHandler(dispatch, error.response, FORGOT_PASSWORD_FAILED);
+      const formField = error.response.data.type;
+      let submissionError = {}; // eslint-disable-line
+      submissionError[formField] = error.response.data.error;
+      submissionError._error = error.response.data.error;
+      throw new SubmissionError(submissionError);
+    }
+
+    dispatch({ type: FORGOT_PASSWORD_SUCCESS, payload: email });
+    dispatch(push('/forgot-password-success'));
+
+    return response;
   };
 };
 
+/**
+ * Sends request to check if the token on route "reset/:token" is valid
+ *
+ * @param token
+ * @returns {function(*=)}
+ */
 const checkIfResetPasswordTokenIsValid = ({ token }) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({type: CHECK_RESET_TOKEN, payload: { token }});
 
-    return axios.post(`${API_URL}/auth/check-reset-token`, { token })
-      .then(response => {
-        dispatch({ type: CHECK_RESET_TOKEN_SUCCESS, payload: response.data.user });
-      })
-      .catch((error) => {
-        if (!error) return;
+    let response;
 
-        errorHandler(dispatch, error.response, CHECK_RESET_TOKEN_FAILED);
-      });
+    try {
+      response = await axios.post(`${API_URL}/auth/check-reset-token`, { token });
+    } catch (error) {
+      errorHandler(dispatch, error.response, CHECK_RESET_TOKEN_FAILED);
+    }
+
+    dispatch({ type: CHECK_RESET_TOKEN_SUCCESS, payload: response.data.user });
+
+    return response;
   };
 };
 
+/**
+ * Sends request to reset user password
+ *
+ * @param userId
+ * @param currentPassword
+ * @param newPassword
+ * @returns {function(*=)}
+ */
 const resetPassword = ({ userId, currentPassword, newPassword }) => {
-  console.log('RESET', userId);
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch({type: RESET_PASSWORD, payload: { userId }});
 
-    return axios.post(`${API_URL}/auth/reset-password`, { userId, currentPassword, newPassword })
-      .then(() => {
-        dispatch({ type: RESET_PASSWORD_SUCCESS });
-      })
-      .catch((error) => {
-        if (!error) return;
+    let response;
 
-        errorHandler(dispatch, error.response, RESET_PASSWORD_FAILED);
-        const formField = error.response.data.type;
-        let submissionError = {}; // eslint-disable-line
-        submissionError[formField] = error.response.data.error;
-        submissionError._error = error.response.data.error;
-        throw new SubmissionError(submissionError);
-      });
+    try {
+      response = await axios.post(`${API_URL}/auth/reset-password`, { userId, currentPassword, newPassword });
+    } catch (error) {
+      errorHandler(dispatch, error.response, RESET_PASSWORD_FAILED);
+      const formField = error.response.data.type;
+      let submissionError = {}; // eslint-disable-line
+      submissionError[formField] = error.response.data.error;
+      submissionError._error = error.response.data.error;
+      throw new SubmissionError(submissionError);
+    }
+
+    dispatch({ type: RESET_PASSWORD_SUCCESS });
+
+    return response;
   };
 };
 
@@ -244,12 +281,20 @@ const resetPassword = ({ userId, currentPassword, newPassword }) => {
  * @returns {function(*, *)}
  */
 function test(user) { // eslint-disable-line
-  return (dispatch) => { // eslint-disable-line
-    return axios.post(API_URL + 'user/test', { user: user }, {
-      headers: { 'Authorization': cookie.load('token') }
-    }).then(response => {
-      console.log(response);
-    });
+  return async (dispatch) => { // eslint-disable-line
+    let response;
+
+    try {
+      response = await axios.post(API_URL + 'user/test', { user: user }, {
+        headers: { 'Authorization': cookie.load('token') }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log(response);
+
+    return response;
   };
 }
 

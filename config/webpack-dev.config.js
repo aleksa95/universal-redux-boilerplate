@@ -21,6 +21,7 @@ module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
     main: [
+      'babel-polyfill',
       `webpack-hot-middleware/client?path=http://${webpackHost}:${webpackPort}/__webpack_hmr`,
       './src/index.js',
     ],
