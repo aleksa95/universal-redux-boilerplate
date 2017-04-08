@@ -3,7 +3,8 @@ const ERROR_TYPES = {
     SIGN_UP: {
       NO_EMAIL: 'user.sing-up.no-email',
       NO_PASSWORD: 'user.sing-up.no-email',
-      EMAIL_TAKEN: 'user.sign-up.email-taken'
+      EMAIL_TAKEN: 'user.sign-up.email-taken',
+      INVALID_EMAIL: 'user.sign-up.invalid-email'
     },
     LOGIN: {
       NON_EXISTING_EMAIL: 'user.login.non-existing-email',

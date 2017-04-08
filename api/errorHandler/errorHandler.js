@@ -25,6 +25,9 @@ const errorHandler = function (ERROR_TYPE, res, message) {
     case ERROR_TYPES.USER.SIGN_UP.EMAIL_TAKEN:
       return res.status(422).send({ error: 'That email address is already in use.' , type: 'email'});
 
+    case ERROR_TYPES.USER.SIGN_UP.INVALID_EMAIL:
+      return res.status(422).send({ error: 'That email address does not exist.' , type: 'email'});
+
     case ERROR_TYPES.USER.FAILED_AUTHENTICATION:
       return res.status(401).json({message: 'Must have token in header'});
 

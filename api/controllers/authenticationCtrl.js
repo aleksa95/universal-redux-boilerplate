@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt-nodejs';
 import nodemailer from 'nodemailer';
 import Hogan from 'hogan.js';
 import fs from 'fs';
+import emailExistence from 'email-existence';
 import passportConfig from '../../config/passport'; // eslint-disable-line
 
 /**
@@ -71,22 +72,28 @@ exports.signUp = (req, res, next) => {
 
   if (!password) return errorHandler(ERROR_TYPES.USER.SIGN_UP.NO_PASSWORD, res);
 
-  User.findOne({ email: email }, (err, existingUser) => {
-    if (err) { return next(err); }
+  emailExistence.check('email@domain.com', (emailError, emailExists) => {
+    if (emailError) return next(emailError);
 
-    if (existingUser) return errorHandler(ERROR_TYPES.USER.SIGN_UP.EMAIL_TAKEN, res);
+    if (!emailExists) return errorHandler(ERROR_TYPES.USER.SIGN_UP.INVALID_EMAIL, res);
 
-    let user = new User({
-      email: email,
-      password: password
-    });
+    User.findOne({ email: email }, (err, existingUser) => {
+      if (err) return next(err);
 
-    user.save().then(user => {
-      let userInfo = setUserInfo(user);
+      if (existingUser) return errorHandler(ERROR_TYPES.USER.SIGN_UP.EMAIL_TAKEN, res);
 
-      res.status(201).json({
-        token: generateToken(userInfo),
-        user: userInfo
+      let user = new User({
+        email: email,
+        password: password
+      });
+
+      user.save().then(user => {
+        let userInfo = setUserInfo(user);
+
+        res.status(201).json({
+          token: generateToken(userInfo),
+          user: userInfo
+        });
       });
     });
   });
