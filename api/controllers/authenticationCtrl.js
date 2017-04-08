@@ -7,6 +7,8 @@ import errorHandler from '../errorHandler/errorHandler';
 import { waterfall } from 'async';
 import bcrypt from 'bcrypt-nodejs';
 import nodemailer from 'nodemailer';
+import Hogan from 'hogan.js';
+import fs from 'fs';
 import passportConfig from '../../config/passport'; // eslint-disable-line
 
 /**
@@ -127,16 +129,18 @@ exports.forgotPassword = function (req, res, next) {
       });
     },
     (token, user, done) => {
-      var smtpTransport = nodemailer.createTransport(config.mailerSettings);
-      var mailOptions = {
+      const smtpTransport = nodemailer.createTransport(config.mailerSettings);
+
+      const template = fs.readFileSync('./src/emailTemplates/forgotPassword.hjs', 'utf-8');
+      const compiledTemplate = Hogan.compile(template);
+
+      const mailOptions = {
         to: user.email,
         from: 'passwordreset@demo.com',
         subject: 'Node.js Password Reset',
-        html: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-        req.headers.origin + '/reset/' + token + '\n\n' +
-        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+        html: compiledTemplate.render({ resetPasswordRef: req.headers.origin + '/reset/' + token })
       };
+
       smtpTransport.sendMail(mailOptions, err => {
         res.sendStatus(200);
         done(err, 'done');
@@ -163,7 +167,7 @@ exports.checkResetToken = (req, res, next) => {
 };
 
 /**
- *
+ * Changes user password if it is not the same as the old one, then sends confirmation email
  *
  * @param req
  * @param res
@@ -195,17 +199,21 @@ exports.resetPassword = (req, res, next) => {
       });
     },
     (user, done) => {
-      var smtpTransport = nodemailer.createTransport(config.mailerSettings);
-      var mailOptions = {
+      const smtpTransport = nodemailer.createTransport(config.mailerSettings);
+
+      const template = fs.readFileSync('./src/emailTemplates/resetPasswordSuccess.hjs', 'utf-8');
+      const compiledTemplate = Hogan.compile(template);
+
+      const mailOptions = {
         to: user.email,
         from: 'passwordreset@demo.com',
-        subject: 'Your password has been changed',
-        text: 'Hello,\n\n' +
-        'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+        subject: 'Node.js Password Reset',
+        html: compiledTemplate.render({ userEmail: user.email })
       };
+
       smtpTransport.sendMail(mailOptions, err => {
         res.sendStatus(200);
-        done(err);
+        done(err, 'done');
       });
     }
   ], err => {

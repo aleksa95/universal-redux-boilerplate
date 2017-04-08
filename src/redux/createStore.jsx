@@ -38,6 +38,4 @@ function createStore(history, data) {
   return createStoreWithReducer(history, data, require('../reducers'));
 }
 
-module.exports = {
-  createStore,
-};
+module.exports = { createStore };

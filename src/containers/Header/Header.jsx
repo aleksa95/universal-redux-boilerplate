@@ -7,12 +7,12 @@ const HStyles = require('./_header.scss');
 
 const Header = ({ isUserAuthenticated, isUserAuthenticating, logoutUser }) => (
   <header className={ HStyles.header }>
-    <div className="left-section">
+    <div className={ HStyles['left-section'] }>
       <Link to="/">Logo</Link>
     </div>
 
     {!isUserAuthenticated && !isUserAuthenticating &&
-    <div className="right-section">
+    <div className={ HStyles['right-section'] }>
       <Link to="/login">Login</Link>
       <Link to="/sign-up" className={ HStyles['sign-up-link'] }>Sign Up</Link>
     </div> }
