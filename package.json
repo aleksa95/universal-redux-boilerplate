@@ -16,10 +16,7 @@
     "postinstall": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aleksa95/universal-redux-boilerplate.git"
-  },
+  "repository": "git+https://github.com/aleksa95/universal-redux-boilerplate.git",
   "author": "Aleksa Stankovic",
   "license": "MIT",
   "devDependencies": {
