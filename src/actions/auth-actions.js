@@ -135,12 +135,9 @@ function checkAuth() {
     let response;
 
     try {
-      response = await axios.get(`/api/auth/authenticate`, { withCredentials: true });
+      response = await axios.get(`http://localhost:3000/api/auth/authenticate`, { withCredentials: true });
     } catch (error) {
-      dispatch({
-        type: AUTHENTICATION_FAILED,
-        payload: error.message
-      });
+      errorHandler(dispatch, error.response, AUTHENTICATION_FAILED);
     }
 
     dispatch({

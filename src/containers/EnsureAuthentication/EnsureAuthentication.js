@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'; // eslint-disable-line no-unused-vars
+import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
+import PropTypes from 'prop-types';
 import { redirect } from '../../actions/auth-actions';
 import { connect } from 'react-redux';
 

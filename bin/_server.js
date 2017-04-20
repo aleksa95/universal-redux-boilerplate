@@ -17,8 +17,10 @@ import {port, apiHost, apiPort} from '../config/env';
 
 global.__CLIENT__ = false; // eslint-disable-line
 
-const targetUrl = `http://${apiHost}:${apiPort}`;
 const pretty = new PrettyError();
+pretty.start();
+
+const targetUrl = `http://${apiHost}:${apiPort}`;
 const app = express();
 const server = new http.Server(app);
 const proxy = httpProxy.createProxyServer({

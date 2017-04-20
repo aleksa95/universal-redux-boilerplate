@@ -219,7 +219,7 @@ exports.resetPassword = (req, res, next) => {
  * @param res
  */
 exports.authenticate = (req, res) => {
-  res.status(200).json({
+  return res.status(200).json({
     user: req.user
   });
 };
@@ -231,7 +231,6 @@ exports.authenticate = (req, res) => {
  * @param next
  */
 exports.authCheckMiddleware = (req, res, next) => {
-  console.log('test', req.isAuthenticated());
   if (req.isAuthenticated()) return next();
   errorHandler(ERROR_TYPES.USER.FAILED_AUTHENTICATION, res);
 };

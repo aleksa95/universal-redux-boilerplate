@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ForgotPasswordForm from '../../../components/forgotPasswordForm';
 import { connect } from 'react-redux';
 import { forgotPassword } from '../../../actions/auth-actions';
@@ -14,7 +15,7 @@ let ForgotPassword = ({ forgotPassword }) => ( // eslint-disable-line
 );
 
 ForgotPassword.propTypes = {
-  loginUser: React.PropTypes.func,
+  loginUser: PropTypes.func,
 };
 
 export default connect(null, { forgotPassword })(ForgotPassword);

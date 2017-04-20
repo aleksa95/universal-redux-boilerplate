@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import LoginForm from '../../../components/loginForm';
 import { loginUser } from '../../../actions/auth-actions';
@@ -13,7 +14,7 @@ const Login = ({ loginUser }) => (
 );
 
 Login.propTypes = {
-  loginUser: React.PropTypes.func,
+  loginUser: PropTypes.func,
 };
 
 export default connect(null, { loginUser })(Login);

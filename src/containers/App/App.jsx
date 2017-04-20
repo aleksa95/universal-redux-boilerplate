@@ -1,5 +1,6 @@
 /* eslint react/prefer-stateless-function: 0, react/forbid-prop-types: 0 */
 import React from 'react';
+import PropTypes from 'prop-types';
 import Header from '../Header/Header';
 
 export default class App extends React.Component {
@@ -9,5 +10,5 @@ export default class App extends React.Component {
 }
 
 App.propTypes = {
-  children: React.PropTypes.any,
+  children: PropTypes.any,
 };
