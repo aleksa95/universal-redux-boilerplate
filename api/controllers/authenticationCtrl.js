@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import config from '../../config/env';
 import passport from 'passport';
@@ -10,17 +9,6 @@ import nodemailer from 'nodemailer';
 import Hogan from 'hogan.js';
 import fs from 'fs';
 import passportConfig from '../../config/passport'; // eslint-disable-line
-
-/**
- * Create JWT token with user information and secret key
- * @param user
- * @param rememberMe
- * @returns {object}
- */
-const generateToken = (user, rememberMe) => {
-  var jwtConfig = rememberMe ? { expiresIn: '31d'} : { expiresIn: '24h'};
-  return 'JWT ' + jwt.sign(user, config.secret, jwtConfig);
-};
 
 /**
  * Creates a user object that goes into thw JWT token
@@ -52,12 +40,21 @@ exports.login = (req, res, next) => {
 
       let userInfo = setUserInfo(user);
 
-      return res.status(201).json({
-        token: generateToken(userInfo, true),
-        user: userInfo,
-        session: req.session,
-        "req.user": req.user
-      });
+      if (req.body.rememberMe) {
+        req.session.cookie.maxAge = 2592000000; //30 days
+
+        return res.status(201).json({
+          user: userInfo,
+          session: req.session,
+          "req.user": req.user
+        });
+      } else {
+        return res.status(201).json({
+          user: userInfo,
+          session: req.session,
+          "req.user": req.user
+        });
+      }
     });
   })(req, res, next);
 };
@@ -80,7 +77,6 @@ exports.signUp = (req, res, next) => {
       let userInfo = setUserInfo(user);
 
       return res.status(201).json({
-        token: generateToken(userInfo, true),
         user: userInfo,
         session: req.session,
         "req.user": req.user
@@ -98,7 +94,6 @@ exports.signUp = (req, res, next) => {
  */
 exports.forgotPassword = function (req, res, next) {
   const email = req.body.email;
-
   if (!email) return errorHandler(ERROR_TYPES.USER.FORGOT_PASSWORD.NO_EMAIL, res);
 
   waterfall([
@@ -112,7 +107,7 @@ exports.forgotPassword = function (req, res, next) {
       });
     },
     (token, done) => {
-      User.findOne({ email: email }, function(err, user) {
+      User.findOne({ 'local.email': email }, function(err, user) {
         if (err) return done(err);
 
         if (!user) return errorHandler(ERROR_TYPES.USER.FORGOT_PASSWORD.NON_EXISTING_EMAIL, res);
@@ -132,7 +127,7 @@ exports.forgotPassword = function (req, res, next) {
       const compiledTemplate = Hogan.compile(template);
 
       const mailOptions = {
-        to: user.email,
+        to: user.local.email,
         from: 'passwordreset@demo.com',
         subject: 'Node.js Password Reset',
         html: compiledTemplate.render({ resetPasswordRef: req.headers.origin + '/reset/' + token })
@@ -185,7 +180,7 @@ exports.resetPassword = (req, res, next) => {
 
           if (!isMatch) return errorHandler(ERROR_TYPES.USER.RESET_PASSWORD.NO_MATCH, res);
 
-          user.password = newPassword;
+          user.local.password = newPassword;
           user.resetPasswordToken = undefined;
           user.resetPasswordExpires = undefined;
 
@@ -202,7 +197,7 @@ exports.resetPassword = (req, res, next) => {
       const compiledTemplate = Hogan.compile(template);
 
       const mailOptions = {
-        to: user.email,
+        to: user.local.email,
         from: 'passwordreset@demo.com',
         subject: 'Node.js Password Reset',
         html: compiledTemplate.render({ userEmail: user.email })
@@ -224,23 +219,6 @@ exports.resetPassword = (req, res, next) => {
  * @param res
  */
 exports.authenticate = (req, res) => {
-  console.log('SESSION USER', req.isAuthenticated(), req.user);
-  console.log('SESSION COOKIE', req.session.cookie);
-  // var token = req.headers.authorization.split(' ')[1];
-
-  // if (!token) return errorHandler(ERROR_TYPES.USER.FAILED_AUTHENTICATION, res);
-
-  // jwt.verify(token, config.secret, (err, user) => {
-  //
-  //   if (err) return errorHandler(ERROR_TYPES.USER.INVALID_TOKEN, res, err);
-  //
-  //   let userInfo = setUserInfo(user);
-  //
-  //   res.status(200).json({
-  //     token: generateToken(userInfo),
-  //     user: userInfo
-  //   });
-  // });
   res.status(200).json({
     user: req.user
   });
@@ -253,13 +231,7 @@ exports.authenticate = (req, res) => {
  * @param next
  */
 exports.authCheckMiddleware = (req, res, next) => {
-  const token = req.headers.authorization.split(' ')[1];
-
-  if (!token) return errorHandler(ERROR_TYPES.USER.FAILED_AUTHENTICATION, res);
-
-  return jwt.verify(token, config.secret, (err) => {
-    if (err) return errorHandler(ERROR_TYPES.USER.INVALID_TOKEN, res, err);
-
-    return next();
-  });
+  console.log('test', req.isAuthenticated());
+  if (req.isAuthenticated()) return next();
+  errorHandler(ERROR_TYPES.USER.FAILED_AUTHENTICATION, res);
 };

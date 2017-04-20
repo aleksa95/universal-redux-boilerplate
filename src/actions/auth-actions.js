@@ -28,9 +28,6 @@ function logoutUser() {
  * Writes new JWT token into the cookie
  * @param token
  */
-function setNewToken(token) {
-  cookie.save('token', token, { path: '/'});
-}
 
 function errorHandler(dispatch, error, type) {
   let errorMessage = '';
@@ -83,9 +80,6 @@ function loginUser({ email, password, rememberMe }) {
       throw new SubmissionError(submissionError);
     }
 
-    console.log('CLIENT RESPONSE', response);
-
-    setNewToken(response.data.token);
     dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });
     dispatch(push('/dashboard'));
 
@@ -123,7 +117,6 @@ function signUpUser({ email, password }) {
       throw new SubmissionError(submissionError);
     }
 
-    setNewToken(response.data.token);
     dispatch({ type: SIGN_UP_SUCCESS, payload: response.data.user });
     dispatch(push('/dashboard'));
 
@@ -132,36 +125,24 @@ function signUpUser({ email, password }) {
 }
 
 /**
- * Checks if user has
- * @param token
+ * Checks if user is authenticated
  * @returns {function(*, *)}
  */
-function checkAuth(token) {
+function checkAuth() {
   return async (dispatch, getStore) => {
-    const isTokenPresent = !!token;
-    const config = { headers: { 'Authorization': cookie.load('token')}, withCredentials: true };
-
     dispatch({type: AUTHENTICATE, payload: getStore().auth.user});
-
-    if (!isTokenPresent) {
-      dispatch({ type: AUTHENTICATION_FAILED, payload: 'Token is not present' });
-      return false;
-    }
 
     let response;
 
     try {
-      response = await axios.get(`/api/auth/authenticate`, config);
+      response = await axios.get(`/api/auth/authenticate`, { withCredentials: true });
     } catch (error) {
-      if (cookie.load('token')) cookie.remove('token', { path: '/' });
-
       dispatch({
         type: AUTHENTICATION_FAILED,
         payload: error.message
       });
     }
 
-    setNewToken(response.data.token);
     dispatch({
       type: AUTHENTICATION_SUCCESS,
       payload: response.data.user

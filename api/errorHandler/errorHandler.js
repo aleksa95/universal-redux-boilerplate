@@ -36,7 +36,7 @@ const errorHandler = function (ERROR_TYPE, res, message) {
       return res.status(422).send(message);
 
     case ERROR_TYPES.USER.FAILED_AUTHENTICATION:
-      return res.status(401).json({message: 'Must have token in header'});
+      return res.status(401).json({message: 'Session timeout'});
 
     case ERROR_TYPES.USER.INVALID_TOKEN:
       return res.status(401).json({message: message});

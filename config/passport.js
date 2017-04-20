@@ -4,7 +4,6 @@ import emailExistence from 'email-existence';
 import LocalStrategy from 'passport-local';
 import ERROR_TYPES from '../api/errorHandler/errorTypes';
 import errorHandler from '../api/errorHandler/errorHandler';
-
 const localOptions = { usernameField: 'email', passwordField : 'password', passReqToCallback : true };
 
 /**
@@ -57,7 +56,6 @@ const localSingUp = new LocalStrategy(localOptions, (req, email, password, done)
     });
   });
 });
-
 
 module.exports = passport => {
   passport.serializeUser((user, done) => {

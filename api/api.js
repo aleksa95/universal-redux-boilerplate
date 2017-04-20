@@ -10,7 +10,8 @@ import passport from 'passport';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import methodOverride from 'method-override';
-var MongoStore = require('connect-mongo')(session);
+
+const MongoStore = require('connect-mongo')(session);
 
 const app = express();
 

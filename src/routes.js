@@ -1,13 +1,12 @@
 /* eslint react/jsx-filename-extension: 0 */
 import React from 'react';
-import cookie from 'react-cookie';
 import { IndexRoute, Route } from 'react-router';
 import { App, Homepage, NotFound, Login, SignUp, Dashboard, EnsureAuthentication, ForgotPassword, ForgotPasswordSuccess, ResetPassword, EnsureUnAuthentication } from './containers';
 import { checkAuth as _checkAuth } from './actions/auth-actions';
 
 export default (store) => { // eslint-disable-line
   const checkAuth = () => {
-    return store.dispatch(_checkAuth(cookie.load('token'))); // eslint-disable-line
+    return store.dispatch(_checkAuth()); // eslint-disable-line
   };
 
   return (
