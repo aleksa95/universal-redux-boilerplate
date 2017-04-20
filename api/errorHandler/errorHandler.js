@@ -11,23 +11,29 @@ const errorHandler = function (ERROR_TYPE, res, message) {
     case ERROR_TYPES.USER.LOGIN.NO_MATCH:
       return res(null, false, { type:'email', error: "Your login details do not match. Please try again." });
 
-    case ERROR_TYPES.USER.LOGIN.NO_MATCH_SEND:
+    case ERROR_TYPES.USER.LOGIN.PASSPORT_ERROR:
       return res.status(422).send(message);
 
     case ERROR_TYPES.USER.LOGIN.NON_EXISTING_EMAIL:
       return res(null, false, { type: 'email', error: 'There is no user registered with that email.' });
 
-    case ERROR_TYPES.USER.SIGN_UP.NO_EMAIL:
-      return res.status(422).send({ error: 'You must enter an email address.', type: 'email'});
-
-    case ERROR_TYPES.USER.SIGN_UP.NO_PASSWORD:
-      return res.status(422).send({ error: 'You must enter a password.', type: 'password' });
+    case ERROR_TYPES.USER.SIGN_UP.FIND:
+      return res(null, false, { error: 'Error while trying to find user.' , type: 'email'});
 
     case ERROR_TYPES.USER.SIGN_UP.EMAIL_TAKEN:
-      return res.status(422).send({ error: 'That email address is already in use.' , type: 'email'});
+      return res(null, false, { error: 'That email address is already in use.' , type: 'email'});
 
     case ERROR_TYPES.USER.SIGN_UP.INVALID_EMAIL:
-      return res.status(422).send({ error: 'That email address does not exist.' , type: 'email'});
+      return res(null, false, { error: 'That email address does not exist.' , type: 'email'});
+
+    case ERROR_TYPES.USER.SIGN_UP.PRE_SAVE.GEN_SALT:
+      return res(null, false, { error: 'Error while saving user (gen salt)' , type: 'email'});
+
+    case ERROR_TYPES.USER.SIGN_UP.PRE_SAVE.HASH_PASSWORD:
+      return res(null, false, { error: 'Error while saving user (hash pass)' , type: 'email'});
+
+    case ERROR_TYPES.USER.SIGN_UP.PASSPORT_ERROR:
+      return res.status(422).send(message);
 
     case ERROR_TYPES.USER.FAILED_AUTHENTICATION:
       return res.status(401).json({message: 'Must have token in header'});

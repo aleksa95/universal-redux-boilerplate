@@ -9,7 +9,6 @@ import bcrypt from 'bcrypt-nodejs';
 import nodemailer from 'nodemailer';
 import Hogan from 'hogan.js';
 import fs from 'fs';
-import emailExistence from 'email-existence';
 import passportConfig from '../../config/passport'; // eslint-disable-line
 
 /**
@@ -43,18 +42,23 @@ const setUserInfo = user => {
  * @param next
  */
 exports.login = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local-login', (err, user, info) => {
     if (err) return next(err);
 
-    if (!user) return errorHandler(ERROR_TYPES.USER.LOGIN.NO_MATCH_SEND, res, info);
+    if (!user) return errorHandler(ERROR_TYPES.USER.LOGIN.PASSPORT_ERROR, res, info);
 
-    let userInfo = setUserInfo(user);
+    req.logIn(user, err => {
+      if (err) return next(err);
 
-    res.status(200).json({
-      token: generateToken(userInfo, true),
-      user: userInfo
+      let userInfo = setUserInfo(user);
+
+      return res.status(201).json({
+        token: generateToken(userInfo, true),
+        user: userInfo,
+        session: req.session,
+        "req.user": req.user
+      });
     });
-
   })(req, res, next);
 };
 
@@ -65,38 +69,24 @@ exports.login = (req, res, next) => {
  * @param next
  */
 exports.signUp = (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  passport.authenticate('local-signup', (err, user, info) => {
+    if (err) return next(err);
 
-  if (!email) return errorHandler(ERROR_TYPES.USER.SIGN_UP.NO_EMAIL, res);
+    if (!user) return errorHandler(ERROR_TYPES.USER.SIGN_UP.PASSPORT_ERROR, res, info);
 
-  if (!password) return errorHandler(ERROR_TYPES.USER.SIGN_UP.NO_PASSWORD, res);
-
-  emailExistence.check('email@domain.com', (emailError, emailExists) => {
-    if (emailError) return next(emailError);
-
-    if (!emailExists) return errorHandler(ERROR_TYPES.USER.SIGN_UP.INVALID_EMAIL, res);
-
-    User.findOne({ email: email }, (err, existingUser) => {
+    req.logIn(user, err => {
       if (err) return next(err);
 
-      if (existingUser) return errorHandler(ERROR_TYPES.USER.SIGN_UP.EMAIL_TAKEN, res);
+      let userInfo = setUserInfo(user);
 
-      let user = new User({
-        email: email,
-        password: password
-      });
-
-      user.save().then(user => {
-        let userInfo = setUserInfo(user);
-
-        res.status(201).json({
-          token: generateToken(userInfo),
-          user: userInfo
-        });
+      return res.status(201).json({
+        token: generateToken(userInfo, true),
+        user: userInfo,
+        session: req.session,
+        "req.user": req.user
       });
     });
-  });
+  })(req, res, next);
 };
 
 /**
@@ -234,20 +224,25 @@ exports.resetPassword = (req, res, next) => {
  * @param res
  */
 exports.authenticate = (req, res) => {
-  var token = req.headers.authorization.split(' ')[1];
+  console.log('SESSION USER', req.isAuthenticated(), req.user);
+  console.log('SESSION COOKIE', req.session.cookie);
+  // var token = req.headers.authorization.split(' ')[1];
 
-  if (!token) return errorHandler(ERROR_TYPES.USER.FAILED_AUTHENTICATION, res);
+  // if (!token) return errorHandler(ERROR_TYPES.USER.FAILED_AUTHENTICATION, res);
 
-  jwt.verify(token, config.secret, (err, user) => {
-
-    if (err) return errorHandler(ERROR_TYPES.USER.INVALID_TOKEN, res, err);
-
-    let userInfo = setUserInfo(user);
-
-    res.status(200).json({
-      token: generateToken(userInfo),
-      user: userInfo
-    });
+  // jwt.verify(token, config.secret, (err, user) => {
+  //
+  //   if (err) return errorHandler(ERROR_TYPES.USER.INVALID_TOKEN, res, err);
+  //
+  //   let userInfo = setUserInfo(user);
+  //
+  //   res.status(200).json({
+  //     token: generateToken(userInfo),
+  //     user: userInfo
+  //   });
+  // });
+  res.status(200).json({
+    user: req.user
   });
 };
 

@@ -1,4 +1,3 @@
-import { apiHost, apiPort } from '../../config/env';
 import axios from 'axios';
 import cookie from 'react-cookie';
 import {
@@ -12,8 +11,6 @@ import {
 } from './types';
 import { SubmissionError } from 'redux-form';
 import { push } from 'react-router-redux';
-
-const API_URL = `http://${apiHost}:${apiPort}/api`;
 
 /**
  * Logs out user
@@ -76,7 +73,7 @@ function loginUser({ email, password, rememberMe }) {
     let response;
 
     try {
-      response = await axios.post(`${API_URL}/auth/login`, { email, password, rememberMe });
+      response = await axios.post(`/api/auth/login`, { email, password, rememberMe });
     } catch (error) {
       errorHandler(dispatch, error.response, LOGIN_FAILED);
       const formField = error.response.data.type;
@@ -85,6 +82,8 @@ function loginUser({ email, password, rememberMe }) {
       submissionError._error = error.response.data.error;
       throw new SubmissionError(submissionError);
     }
+
+    console.log('CLIENT RESPONSE', response);
 
     setNewToken(response.data.token);
     dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });
@@ -107,7 +106,7 @@ function signUpUser({ email, password }) {
     let response;
 
     try {
-      response = await axios.post(`${API_URL}/auth/sign-up`, { email, password });
+      response = await axios.post(`/api/auth/sign-up`, { email, password });
     } catch (error) {
       errorHandler(dispatch, error.response, SIGN_UP_FAILED);
 
@@ -140,7 +139,7 @@ function signUpUser({ email, password }) {
 function checkAuth(token) {
   return async (dispatch, getStore) => {
     const isTokenPresent = !!token;
-    const config = { headers: { 'Authorization': cookie.load('token') }};
+    const config = { headers: { 'Authorization': cookie.load('token')}, withCredentials: true };
 
     dispatch({type: AUTHENTICATE, payload: getStore().auth.user});
 
@@ -152,7 +151,7 @@ function checkAuth(token) {
     let response;
 
     try {
-      response = await axios.get(`${API_URL}/auth/authenticate`, config);
+      response = await axios.get(`/api/auth/authenticate`, config);
     } catch (error) {
       if (cookie.load('token')) cookie.remove('token', { path: '/' });
 
@@ -214,7 +213,7 @@ const forgotPassword = ({ email }) => {
     let response;
 
     try {
-      response = await axios.post(`${API_URL}/auth/forgot-password`, { email });
+      response = await axios.post(`/api/auth/forgot-password`, { email });
     } catch (error) {
       errorHandler(dispatch, error.response, FORGOT_PASSWORD_FAILED);
       const formField = error.response.data.type;
@@ -244,7 +243,7 @@ const checkIfResetPasswordTokenIsValid = ({ token }) => {
     let response;
 
     try {
-      response = await axios.post(`${API_URL}/auth/check-reset-token`, { token });
+      response = await axios.post(`/api/auth/check-reset-token`, { token });
     } catch (error) {
       errorHandler(dispatch, error.response, CHECK_RESET_TOKEN_FAILED);
     }
@@ -270,7 +269,7 @@ const resetPassword = ({ userId, currentPassword, newPassword }) => {
     let response;
 
     try {
-      response = await axios.post(`${API_URL}/auth/reset-password`, { userId, currentPassword, newPassword });
+      response = await axios.post(`/api/auth/reset-password`, { userId, currentPassword, newPassword });
     } catch (error) {
       errorHandler(dispatch, error.response, RESET_PASSWORD_FAILED);
       const formField = error.response.data.type;
@@ -296,7 +295,7 @@ function test(user) { // eslint-disable-line
     let response;
 
     try {
-      response = await axios.post(API_URL + 'user/test', { user: user }, {
+      response = await axios.post('/api/user/test', { user: user }, {
         headers: { 'Authorization': cookie.load('token') }
       });
     } catch (error) {

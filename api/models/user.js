@@ -2,21 +2,28 @@ import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
 import CONSTS from '../data/Constants';
+import ERROR_TYPES from '../errorHandler/errorTypes';
 
 const UserSchema = new Schema({
-    email: {
-      type: String,
-      lowercase: true,
-      unique: true,
-      required: true
+    local: {
+      email: {
+        type: String,
+        lowercase: true,
+        unique: true
+      },
+      password: String,
     },
-    password: {
-      type: String,
-      required: true
+    facebook         : {
+      id           : String,
+      token        : String,
+      email        : String,
+      name         : String
     },
-    profile: {
-      firstName: { type: String },
-      lastName: { type: String }
+    twitter          : {
+      id           : String,
+      token        : String,
+      displayName  : String,
+      username     : String
     },
     role: {
       type: String,
@@ -36,7 +43,7 @@ const UserSchema = new Schema({
  * @param cb
  */
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+  bcrypt.compare(candidatePassword, this.local.password, function(err, isMatch) {
     if (err) { return cb(err); }
 
     cb(null, isMatch);
@@ -45,30 +52,21 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 UserSchema.pre('save', function(next) {
   const user = this,
-    SALT_FACTOR = 5;
+        SALT_FACTOR = 5;
 
-  if (!user.isModified('password')) return next();
+  if (!user.isModified('local.password')) return next(null, user);
 
   bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
-    if (err) return next(err);
+    if (err) return next(err, null, ERROR_TYPES.USER.PRE_SAVE.GEN_SALT);
 
-    bcrypt.hash(user.password, salt, null, function(err, hash) {
-      if (err) return next(err);
-      user.password = hash;
-      next();
+    bcrypt.hash(user.local.password, salt, null, function(err, hash) {
+      if (err) return next(err, null, ERROR_TYPES.USER.PRE_SAVE.HASH_PASSWORD);
+
+      user.local.password = hash;
+
+      next(null, user);
     });
   });
 });
-
-/**
- * Generates password hash before writing a new user to the databse
- */
-UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) { return cb(err); }
-
-    cb(null, isMatch);
-  });
-};
 
 module.exports = mongoose.model('User', UserSchema);

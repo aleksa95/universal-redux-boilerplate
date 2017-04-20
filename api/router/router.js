@@ -10,5 +10,5 @@ module.exports = function(app) {
 
   apiRoutes.use('/user', userRoutes);
 
-  app.use('/api', apiRoutes);
+  app.use('/', apiRoutes);
 };
