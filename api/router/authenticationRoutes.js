@@ -1,6 +1,8 @@
 import express from 'express';
 import RateLimit from 'express-rate-limit';
 import { signUp, login, authenticate, forgotPassword, checkResetToken, resetPassword, logout } from '../controllers/authenticationCtrl';
+import passport from 'passport';
+import passportConfig from '../../config/passport'; // eslint-disable-line
 
 var createAccountLimiter = new RateLimit({
   windowMs: 60*60*1000, // 1 hour window
@@ -25,5 +27,16 @@ authRoutes.post('/check-reset-token', checkResetToken);
 authRoutes.post('/reset-password', resetPassword);
 
 authRoutes.get('/authenticate', authenticate);
+
+// route for facebook authentication and login
+authRoutes.get('/facebook', passport.authenticate('facebook', { scope : ['email'] }));
+
+// handle the callback after facebook has authenticated the user
+authRoutes.get('/facebook/callback', passport.authenticate('facebook', {
+  successRedirect : '/profile',
+  failureRedirect : '/'
+}), function(req, res){ console.log(req.isAuthenticated(), req.user) });
+
+
 
 export default authRoutes;

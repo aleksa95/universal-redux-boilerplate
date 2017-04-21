@@ -87,6 +87,12 @@ function loginUser({ email, password, rememberMe }) {
   };
 }
 
+const facebookLogin = () => {
+  return () => {
+    axios.get(`/api/auth/facebook`, { withCredentials: true });
+  };
+};
+
 /**
  * Creates new user
  * @param email
@@ -138,7 +144,7 @@ function checkAuth() {
       errorHandler(dispatch, error.response, AUTH_ACTIONS.AUTHENTICATION_FAILED);
     }
 
-    if (response.data && response.data.user) {
+    if (response && response.data && response.data.user) {
       dispatch({
         type: AUTH_ACTIONS.AUTHENTICATION_SUCCESS,
         payload: response.data.user
@@ -260,5 +266,5 @@ const resetPassword = ({ userId, currentPassword, newPassword }) => {
 
 module.exports = {
   logoutUser, loginUser, checkAuth, signUpUser, redirect, authFormsValidator, forgotPassword,
-  checkIfResetPasswordTokenIsValid, resetPassword
+  checkIfResetPasswordTokenIsValid, resetPassword, facebookLogin
 };

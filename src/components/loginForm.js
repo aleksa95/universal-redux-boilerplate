@@ -7,7 +7,7 @@ import { authFormsValidator } from '../actions/auth/authActionCreators';
 
 const LGFStyles = require('../containers/Authentication/_authentication.scss');
 
-let LoginForm = ({ handleSubmit, pristine, submitting, invalid }) => ( // eslint-disable-line
+let LoginForm = ({ handleSubmit, pristine, submitting, invalid, facebookLogin }) => ( // eslint-disable-line
   <form className={classNames(LGFStyles['authentication-form'], 'login-form')} onSubmit={handleSubmit}>
     <Field name="email" component={formGroup} placeholder="Email" type="text"
            wrapperClassName={LGFStyles['authentication-form-input-group']}
@@ -28,6 +28,7 @@ let LoginForm = ({ handleSubmit, pristine, submitting, invalid }) => ( // eslint
       <Link to="/forgot-password">Forgot password?</Link>
     </div>
     <button type="submit" disabled={pristine || submitting || invalid}>Submit</button>
+    <button type="button" onClick={ facebookLogin }>Facebook</button>
   </form>
 );
 
