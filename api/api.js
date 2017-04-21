@@ -2,14 +2,15 @@
 import express from 'express';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
-mongoose.Promise = global.Promise;
-import { apiPort, database } from '../config/env';
 import router from './router/router';
 import passport from 'passport';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import methodOverride from 'method-override';
+import mongoose from 'mongoose';
+mongoose.Promise = global.Promise;
+
+import { apiPort, database } from '../config/env';
 
 const MongoStore = require('connect-mongo')(session);
 

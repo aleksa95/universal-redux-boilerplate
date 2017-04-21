@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { redirect } from '../../../actions/auth-actions';
+import { redirect } from '../../../actions/auth/authActionCreators';
 
 const FPSStyles = require('./forgotPasswordSuccess.scss');
 

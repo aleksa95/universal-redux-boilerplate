@@ -50,6 +50,9 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
   });
 };
 
+/**
+ * Hashes user password Before the user is saved to the database
+ */
 UserSchema.pre('save', function(next) {
   const user = this,
         SALT_FACTOR = 5;

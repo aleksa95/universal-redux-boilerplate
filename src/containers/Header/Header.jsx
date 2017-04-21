@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { logoutUser } from '../../actions/auth-actions';
+import { logoutUser } from '../../actions/auth/authActionCreators';
 
 const HStyles = require('./_header.scss');
 

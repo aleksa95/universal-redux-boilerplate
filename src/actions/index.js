@@ -1,4 +1,5 @@
-import authActions from './auth-actions';
+import authActions from './auth/authActionCreators';
+
 module.exports = {
   authActions
 };

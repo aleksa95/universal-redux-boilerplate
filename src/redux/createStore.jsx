@@ -3,7 +3,7 @@ import { routerMiddleware } from 'react-router-redux';
 import { createStore as _createStore, applyMiddleware, compose } from 'redux';
 import reduxThunk from 'redux-thunk';
 
-function createStoreWithReducer(history, data, reducer) {
+const createStoreWithReducer = (history, data, reducer) => {
   const reduxRouterMiddleware = routerMiddleware(history);
   const middleware = [reduxRouterMiddleware, reduxThunk];
 
@@ -32,10 +32,10 @@ function createStoreWithReducer(history, data, reducer) {
   }
 
   return store;
-}
+};
 
-function createStore(history, data) {
+const createStore = (history, data) => {
   return createStoreWithReducer(history, data, require('../reducers'));
-}
+};
 
 module.exports = { createStore };

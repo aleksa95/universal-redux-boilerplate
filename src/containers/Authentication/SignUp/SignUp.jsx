@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SignUpForm from '../../../components/singUpForm';
-import { signUpUser } from '../../../actions/auth-actions';
+import { signUpUser } from '../../../actions/auth/authActionCreators';
 
 const SGUStyles = require('../_authentication.scss');
 

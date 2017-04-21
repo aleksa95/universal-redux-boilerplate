@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { redirect, resetPassword, checkIfResetPasswordTokenIsValid } from '../../../actions/auth-actions';
+import { redirect, resetPassword, checkIfResetPasswordTokenIsValid } from '../../../actions/auth/authActionCreators';
 import ResetPasswordForm from '../../../components/ResetPasswordForm';
 
 const RPAStyles = require('../_authentication.scss');

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ForgotPasswordForm from '../../../components/forgotPasswordForm';
 import { connect } from 'react-redux';
-import { forgotPassword } from '../../../actions/auth-actions';
+import { forgotPassword } from '../../../actions/auth/authActionCreators';
 
 const FPStyles = require('../_authentication.scss');
 

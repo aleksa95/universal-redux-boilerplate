@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import formGroup from './authenticationFormGroup';
 import { Link } from 'react-router';
 import classNames from 'classnames';
-import { authFormsValidator } from '../actions/auth-actions';
+import { authFormsValidator } from '../actions/auth/authActionCreators';
 
 const LGFStyles = require('../containers/Authentication/_authentication.scss');
 

@@ -1,14 +1,6 @@
 import axios from 'axios';
 import cookie from 'react-cookie';
-import {
-  SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILED, DISMISS_SIGN_UP_ERROR,
-  LOGIN, LOGIN_SUCCESS, LOGIN_FAILED,
-  LOGOUT, LOGOUT_SUCCESS,
-  FORGOT_PASSWORD, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILED,
-  RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILED,
-  CHECK_RESET_TOKEN, CHECK_RESET_TOKEN_SUCCESS, CHECK_RESET_TOKEN_FAILED,
-  AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILED
-} from './types';
+import authActions from './authActions';
 import { SubmissionError } from 'redux-form';
 import { push } from 'react-router-redux';
 
@@ -18,16 +10,11 @@ import { push } from 'react-router-redux';
  */
 function logoutUser() {
   return (dispatch, getStore) => { // eslint-disable-line
-    dispatch({type: LOGOUT, payload: getStore().auth.user});
+    dispatch({type: authActions.LOGOUT, payload: getStore().auth.user});
     cookie.remove('token', { path: '/' });
-    dispatch({type: LOGOUT_SUCCESS});
+    dispatch({type: authActions.LOGOUT_SUCCESS});
   };
 }
-
-/**
- * Writes new JWT token into the cookie
- * @param token
- */
 
 function errorHandler(dispatch, error, type) {
   let errorMessage = '';
@@ -65,14 +52,14 @@ function errorHandler(dispatch, error, type) {
  */
 function loginUser({ email, password, rememberMe }) {
   return async (dispatch) => {
-    dispatch({type: LOGIN, payload: {email, password}});
+    dispatch({type: authActions.LOGIN, payload: {email, password}});
 
     let response;
 
     try {
       response = await axios.post(`/api/auth/login`, { email, password, rememberMe });
     } catch (error) {
-      errorHandler(dispatch, error.response, LOGIN_FAILED);
+      errorHandler(dispatch, error.response, authActions.LOGIN_FAILED);
       const formField = error.response.data.type;
       let submissionError = {}; // eslint-disable-line
       submissionError[formField] = error.response.data.error;
@@ -80,7 +67,7 @@ function loginUser({ email, password, rememberMe }) {
       throw new SubmissionError(submissionError);
     }
 
-    dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });
+    dispatch({ type: authActions.LOGIN_SUCCESS, payload: response.data.user });
     dispatch(push('/dashboard'));
 
     return response;
@@ -95,18 +82,18 @@ function loginUser({ email, password, rememberMe }) {
  */
 function signUpUser({ email, password }) {
   return async (dispatch) => {
-    dispatch({type: SIGN_UP, payload: {email, password}});
+    dispatch({type: authActions.SIGN_UP, payload: {email, password}});
 
     let response;
 
     try {
       response = await axios.post(`/api/auth/sign-up`, { email, password });
     } catch (error) {
-      errorHandler(dispatch, error.response, SIGN_UP_FAILED);
+      errorHandler(dispatch, error.response, authActions.SIGN_UP_FAILED);
 
       if (error.response.status === 429) {
         setTimeout(() => {
-          dispatch({ type: DISMISS_SIGN_UP_ERROR});
+          dispatch({ type: authActions.DISMISS_SIGN_UP_ERROR});
         }, 15000);
       }
 
@@ -117,7 +104,7 @@ function signUpUser({ email, password }) {
       throw new SubmissionError(submissionError);
     }
 
-    dispatch({ type: SIGN_UP_SUCCESS, payload: response.data.user });
+    dispatch({ type: authActions.SIGN_UP_SUCCESS, payload: response.data.user });
     dispatch(push('/dashboard'));
 
     return response;
@@ -130,18 +117,18 @@ function signUpUser({ email, password }) {
  */
 function checkAuth() {
   return async (dispatch, getStore) => {
-    dispatch({type: AUTHENTICATE, payload: getStore().auth.user});
+    dispatch({type: authActions.AUTHENTICATE, payload: getStore().auth.user});
 
     let response;
 
     try {
       response = await axios.get(`http://localhost:3000/api/auth/authenticate`, { withCredentials: true });
     } catch (error) {
-      errorHandler(dispatch, error.response, AUTHENTICATION_FAILED);
+      errorHandler(dispatch, error.response, authActions.AUTHENTICATION_FAILED);
     }
 
     dispatch({
-      type: AUTHENTICATION_SUCCESS,
+      type: authActions.AUTHENTICATION_SUCCESS,
       payload: response.data.user
     });
 
@@ -186,14 +173,14 @@ const authFormsValidator = values => {
  */
 const forgotPassword = ({ email }) => {
   return async (dispatch) => {
-    dispatch({type: FORGOT_PASSWORD, payload: { email }});
+    dispatch({type: authActions.FORGOT_PASSWORD, payload: { email }});
 
     let response;
 
     try {
       response = await axios.post(`/api/auth/forgot-password`, { email });
     } catch (error) {
-      errorHandler(dispatch, error.response, FORGOT_PASSWORD_FAILED);
+      errorHandler(dispatch, error.response, authActions.FORGOT_PASSWORD_FAILED);
       const formField = error.response.data.type;
       let submissionError = {}; // eslint-disable-line
       submissionError[formField] = error.response.data.error;
@@ -201,7 +188,7 @@ const forgotPassword = ({ email }) => {
       throw new SubmissionError(submissionError);
     }
 
-    dispatch({ type: FORGOT_PASSWORD_SUCCESS, payload: email });
+    dispatch({ type: authActions.FORGOT_PASSWORD_SUCCESS, payload: email });
     dispatch(push('/forgot-password-success'));
 
     return response;
@@ -216,17 +203,17 @@ const forgotPassword = ({ email }) => {
  */
 const checkIfResetPasswordTokenIsValid = ({ token }) => {
   return async (dispatch) => {
-    dispatch({type: CHECK_RESET_TOKEN, payload: { token }});
+    dispatch({type: authActions.CHECK_RESET_TOKEN, payload: { token }});
 
     let response;
 
     try {
       response = await axios.post(`/api/auth/check-reset-token`, { token });
     } catch (error) {
-      errorHandler(dispatch, error.response, CHECK_RESET_TOKEN_FAILED);
+      errorHandler(dispatch, error.response, authActions.CHECK_RESET_TOKEN_FAILED);
     }
 
-    dispatch({ type: CHECK_RESET_TOKEN_SUCCESS, payload: response.data.user });
+    dispatch({ type: authActions.CHECK_RESET_TOKEN_SUCCESS, payload: response.data.user });
 
     return response;
   };
@@ -242,14 +229,14 @@ const checkIfResetPasswordTokenIsValid = ({ token }) => {
  */
 const resetPassword = ({ userId, currentPassword, newPassword }) => {
   return async (dispatch) => {
-    dispatch({type: RESET_PASSWORD, payload: { userId }});
+    dispatch({type: authActions.RESET_PASSWORD, payload: { userId }});
 
     let response;
 
     try {
       response = await axios.post(`/api/auth/reset-password`, { userId, currentPassword, newPassword });
     } catch (error) {
-      errorHandler(dispatch, error.response, RESET_PASSWORD_FAILED);
+      errorHandler(dispatch, error.response, authActions.RESET_PASSWORD_FAILED);
       const formField = error.response.data.type;
       let submissionError = {}; // eslint-disable-line
       submissionError[formField] = error.response.data.error;
@@ -257,7 +244,7 @@ const resetPassword = ({ userId, currentPassword, newPassword }) => {
       throw new SubmissionError(submissionError);
     }
 
-    dispatch({ type: RESET_PASSWORD_SUCCESS });
+    dispatch({ type: authActions.RESET_PASSWORD_SUCCESS });
 
     return response;
   };

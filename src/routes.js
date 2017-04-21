@@ -2,7 +2,7 @@
 import React from 'react';
 import { IndexRoute, Route } from 'react-router';
 import { App, Homepage, NotFound, Login, SignUp, Dashboard, EnsureAuthentication, ForgotPassword, ForgotPasswordSuccess, ResetPassword, EnsureUnAuthentication } from './containers';
-import { checkAuth as _checkAuth } from './actions/auth-actions';
+import { checkAuth as _checkAuth } from './actions/auth/authActionCreators';
 
 export default (store) => { // eslint-disable-line
   const checkAuth = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import formGroup from './authenticationFormGroup';
-import { authFormsValidator } from '../actions/auth-actions';
+import { authFormsValidator } from '../actions/auth/authActionCreators';
 
 const styles = require('../containers/Authentication/_authentication.scss');
 
