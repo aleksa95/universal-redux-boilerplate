@@ -17,8 +17,8 @@ import passportConfig from '../../config/passport'; // eslint-disable-line
  */
 const setUserInfo = user => {
   return {
-    _id: user._id,
-    email: user.email,
+    id: user._id,
+    email: user.local.email,
     role: user.role,
   };
 };
@@ -57,6 +57,11 @@ exports.login = (req, res, next) => {
       }
     });
   })(req, res, next);
+};
+
+exports.logout = (req, res) => {
+  req.logout();
+  res.sendStatus(200);
 };
 
 /**
@@ -219,9 +224,13 @@ exports.resetPassword = (req, res, next) => {
  * @param res
  */
 exports.authenticate = (req, res) => {
-  return res.status(200).json({
-    user: req.user
-  });
+  let user = undefined;
+
+  if (req.isAuthenticated() && req.user) {
+    user = setUserInfo(req.user)
+  }
+
+  return res.status(200).json({ user });
 };
 
 /**

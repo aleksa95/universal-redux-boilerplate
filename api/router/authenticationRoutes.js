@@ -1,6 +1,6 @@
 import express from 'express';
 import RateLimit from 'express-rate-limit';
-import { signUp, login, authenticate, forgotPassword, checkResetToken, resetPassword } from '../controllers/authenticationCtrl';
+import { signUp, login, authenticate, forgotPassword, checkResetToken, resetPassword, logout } from '../controllers/authenticationCtrl';
 
 var createAccountLimiter = new RateLimit({
   windowMs: 60*60*1000, // 1 hour window
@@ -15,6 +15,8 @@ const authRoutes = express.Router();
 authRoutes.post('/sign-up', createAccountLimiter, signUp);
 
 authRoutes.post('/login', login);
+
+authRoutes.get('/logout', logout);
 
 authRoutes.post('/forgot-password', forgotPassword);
 

@@ -1,7 +1,8 @@
-export default {
+const AUTH_ATCIONS = {
   SIGN_UP: 'sign-up',
   SIGN_UP_SUCCESS: 'sign-up-success',
   SIGN_UP_FAILED: 'sign-up-failed',
+  SIGN_UP_TO_MUCH_ATTEMPTS: 'sign-up-to-much-attempts',
   DISMISS_SIGN_UP_ERROR: 'dismiss-sign-up-error',
 
   LOGIN: 'login-user',
@@ -28,3 +29,5 @@ export default {
   CHECK_RESET_TOKEN_SUCCESS: 'check-reset-token-success',
   CHECK_RESET_TOKEN_FAILED: 'check-reset_token-failed'
 };
+
+export default AUTH_ATCIONS;
