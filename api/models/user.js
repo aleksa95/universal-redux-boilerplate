@@ -9,7 +9,9 @@ const UserSchema = new Schema({
       email: {
         type: String,
         lowercase: true,
-        unique: true
+        unique: true,
+        trim: true,
+        sparse: true
       },
       password: String,
     },
@@ -22,8 +24,8 @@ const UserSchema = new Schema({
     twitter          : {
       id           : String,
       token        : String,
-      displayName  : String,
-      username     : String
+      email        : String,
+      name         : String
     },
     role: {
       type: String,
@@ -56,6 +58,8 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
 UserSchema.pre('save', function(next) {
   const user = this,
         SALT_FACTOR = 5;
+
+  if (!user.local) next(null, user);
 
   if (!user.isModified('local.password')) return next(null, user);
 

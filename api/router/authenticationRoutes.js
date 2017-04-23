@@ -34,4 +34,11 @@ authRoutes.get('/facebook/callback', passport.authenticate('facebook', {
   failureRedirect : '/'
 }));
 
+authRoutes.get('/twitter', passport.authenticate('twitter'));
+authRoutes.get('/twitter/callback',
+  passport.authenticate('twitter', {
+    successRedirect : '/dashboard',
+    failureRedirect : '/fail'
+  }));
+
 export default authRoutes;

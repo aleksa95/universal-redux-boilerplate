@@ -30,6 +30,7 @@ let LoginForm = ({ handleSubmit, pristine, submitting, invalid, facebookLogin })
     <button type="submit" disabled={pristine || submitting || invalid}>Submit</button>
 
     <a href="http://localhost:3000/api/auth/facebook"><button type="button">Facebook</button></a>
+    <a href="http://localhost:3000/api/auth/twitter"><button type="button">Twitter</button></a>
   </form>
 );
 
