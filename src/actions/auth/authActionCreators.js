@@ -6,6 +6,8 @@ import { push } from 'react-router-redux';
 function errorHandler(dispatch, error, type, formError) {
   let errorMessage = '';
 
+  if (!error) return;
+
   if (error.data && error.data.error) {
     errorMessage = error.data.error;
   } else if (error.data && error.data.message) {

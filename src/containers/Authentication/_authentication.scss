@@ -1,5 +1,22 @@
 @import "../../styles/_text";
+@import "../../styles/_buttons";
 @import "./ForgotPassword/forgotPasswordSuccess";
+$authentication-title-font-size: $font-size-giant;
+$authentication-title-margin: 40px 0 10px 0;
+$authentication-error-wrapper-margin: 60px 0 0 0;
+$authentication-form-min-width: 350px;
+$authentication-form-max-width: 350px;
+$login-form-button-margin-top: 30px;
+$authentication-form-input-padding: 10px 0 10px 5px;
+$authentication-form-input-margin-top: 30px;
+$authentication-form-border: none;
+$authentication-form-border-bottom: 1px solid lightgray;
+$authentication-form-error-position-top: 70px;
+$authentication-form-color: red;
+$authentication-form-checkbox-margin-right: 10px;
+$authentication-form-forgot-password-wrapper-margin-top: 30px;
+$authentication-form-forgot-password-wrapper-color: #48a8ef;
+$authentication-form-forgot-password-wrapper-hover-color: lighten($authentication-form-forgot-password-wrapper-color, 10);
 
 .authentication-wrapper {
   display: flex;
@@ -8,22 +25,22 @@
   flex-direction: column;
 
   .authentication-title {
-    font-size: $font-size-giant;
-    margin: 40px 0 10px 0;
+    font-size: $authentication-title-font-size;
+    margin: $authentication-title-margin;
     text-align: center;
   }
 
   .authentication-error-wrapper {
-    margin: 60px 0 0 0;
+    margin: $authentication-error-wrapper-margin;
   }
 
   .authentication-form {
-    min-width: 350px;
-    max-width: 350px;
+    min-width: $authentication-form-min-width;
+    max-width: $authentication-form-max-width;
 
     &.login-form {
       button {
-        margin-top: 30px;
+        margin-top: $login-form-button-margin-top;
       }
     }
 
@@ -32,17 +49,17 @@
 
       .authentication-form-input {
         font-size: $font-size-regular;
-        padding: 10px 0 10px 5px;
+        padding: $authentication-form-input-padding;
+        margin-top: $authentication-form-input-margin-top;
         width: 100%;
-        margin-top: 30px;
-        border: none;
-        border-bottom: 1px solid lightgray;
+        border: $authentication-form-border;
+        border-bottom: $authentication-form-border-bottom;
       }
 
       .authentication-form-error {
         position: absolute;
-        top: 70px;
-        color: red;
+        top: $authentication-form-error-position-top;
+        color: $authentication-form-color;
       }
     }
 
@@ -52,7 +69,7 @@
     }
 
     .authentication-form-checkbox {
-      margin-right: 10px;
+      margin-right: $authentication-form-checkbox-margin-right;
 
       &+label {
         user-select: none;
@@ -60,32 +77,14 @@
     }
 
     button {
-      transition: 0.2s ease-in;
-      margin-top: 35px;
-      border-radius: 0;
-      border: 1px solid lightgray;
-      background: #fff;
-      width: 100%;
-      padding: 10px 0;
-      font-size: 14px;
-      cursor: pointer;
-
-      &:hover {
-        background: #f0f0f0;
-      }
-
-      &:disabled {
-        user-select: none;
-        cursor: not-allowed;
-        background: #f0f0f0;
-      }
+      @include authentication-form-button;
     }
 
     .forgot-password-wrapper {
       display: flex;
       justify-content: space-between;
-      margin-top: 30px;
-      color: #48a8ef;
+      margin-top: $authentication-form-forgot-password-wrapper-margin-top;
+      color: $authentication-form-forgot-password-wrapper-color;
 
       a {
         user-select: none;
@@ -93,13 +92,8 @@
 
       a:hover, label:hover {
         cursor: pointer;
-        color: lighten(#48a8ef, 10);
+        color: $authentication-form-forgot-password-wrapper-hover-color;
       }
     }
-  }
-
-  .hidden-field {
-    display: none;
-    font-size: 1px;
   }
 }

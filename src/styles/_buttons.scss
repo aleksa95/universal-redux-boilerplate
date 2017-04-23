@@ -1,0 +1,59 @@
+@mixin transition-button() {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 15px;
+  color: gray;
+  cursor: pointer;
+  display: block;
+  position: relative;
+  border: 2px solid #b6b6b6;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  background: #fff;
+
+  &:hover {
+    color: #fff;
+    background-color: transparent;
+  }
+
+  &:hover:before {
+    top: 0;
+    bottom: auto;
+    height: 100%;
+  }
+
+  &:before {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 0;
+    width: 100%;
+    z-index: -1;
+    content: '';
+    color: #000;
+    background: #b6b6b6;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+  }
+}
+
+@mixin authentication-form-button() {
+  transition: 0.2s ease-in;
+  margin-top: 35px;
+  border-radius: 0;
+  border: 1px solid lightgray;
+  background: #fff;
+  width: 100%;
+  padding: 10px 0;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+
+  &:disabled {
+    user-select: none;
+    cursor: not-allowed;
+    background: #f0f0f0;
+  }
+}

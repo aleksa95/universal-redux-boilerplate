@@ -1,15 +1,20 @@
+$header-height: 60px;
+$header-border-bottom: 1px solid lightgray;
+$header-padding: 0 30px;
+$header-sign-up-link-margin-left: 35px;
+
 .header {
-  height: 60px;
-  border-bottom: 1px solid lightgray;
+  height: $header-height;
+  border-bottom: $header-border-bottom;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 30px;
+  padding: $header-padding;
 
   .left-section, .right-section {}
 
   .sign-up-link {
-    margin-left: 35px;
+    margin-left: $header-sign-up-link-margin-left;
   }
 
   a, .sign-out-btn {

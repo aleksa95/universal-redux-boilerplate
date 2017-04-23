@@ -1,20 +1,18 @@
 import User from '../api/models/user';
+import config from './env';
 import LocalStrategy from 'passport-local';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { Strategy as TwitterStrategy } from 'passport-twitter';
-import config from './env';
 import passportStrategies from '../api/passport/index';
 
 const passportConfig = config.passport;
 
 module.exports = passport => {
   passport.serializeUser((user, done) => {
-    console.log('SERIALIZE');
     done(null, user.id);
   });
 
-  passport.deserializeUser((id, done) =>{
-    console.log('DE-SERIALIZE');
+  passport.deserializeUser((id, done) => {
     User.findById(id, (err, user) => {
       if (err) done(err);
 

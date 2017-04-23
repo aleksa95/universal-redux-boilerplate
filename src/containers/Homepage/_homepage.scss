@@ -1,23 +1,26 @@
+$homepage-header: 300px;
+$homepage-header-color: #fff;
+$homepage-header-margin-bottom: 1px solid lightgray;
+$homepage-header-title-background: red;
+$homepage-header-title-filter: grayscale(50%);
+$homepage-header-title-padding: 10px 30px;
+
 .homepage {
 
   .homepage-header {
-    height: 300px;
+    height: $homepage-header;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    border-bottom: 1px solid lightgray;
+    color: $homepage-header-color;
+    border-bottom: $homepage-header-margin-bottom;
 
-    h1 {
-      background: red;
+    .title {
+      background: $homepage-header-title-background;
+      filter: $homepage-header-title-filter;
+      padding: $homepage-header-title-padding;
       user-select: none;
-      filter: grayscale(50%);
-      padding: 10px 30px;
     }
-  }
-
-  .title {
-    color: lightcoral;
   }
 }
