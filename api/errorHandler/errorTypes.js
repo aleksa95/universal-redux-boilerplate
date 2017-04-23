@@ -31,7 +31,8 @@ const ERROR_TYPES = {
     ROLE_MISMATCH: 'user.role-mismatch',
     PRE_SAVE: {
       GEN_SALT: 'user.pre-save.gen-salt',
-      HASH_PASSWORD: 'user.pre-save.hash-password'
+      HASH_PASSWORD: 'user.pre-save.hash-password',
+      ERROR: 'user.pre-save.error'
     }
   }
 };

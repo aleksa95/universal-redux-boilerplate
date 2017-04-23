@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt-nodejs';
 import nodemailer from 'nodemailer';
 import Hogan from 'hogan.js';
 import fs from 'fs';
-import passportConfig from '../../config/passport'; // eslint-disable-line
+import passportConfig from '../../config/passportConfig'; // eslint-disable-line
 
 /**
  * Creates a user object that goes into thw JWT token

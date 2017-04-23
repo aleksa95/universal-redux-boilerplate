@@ -18,7 +18,7 @@ const app = express();
 
 app.use(logger('dev'));
 
-require('../config/passport')(passport);
+require('../config/passportConfig')(passport);
 
 app.use(express.static('public'));
 app.use(cookieParser('mySecretKey'));

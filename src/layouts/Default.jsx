@@ -21,6 +21,10 @@ export default class Default extends Component {
           </head>
           <body>
             <div id="root" dangerouslySetInnerHTML={{ __html: content }} />
+            <script
+              // removes hashes from facebook login/sign-up callback
+              dangerouslySetInnerHTML={{ __html: `if (window.location.hash == "#_=_") {window.location.hash = ""; window.location = window.location.href.split('#')[0];}`}}
+            />
             <script dangerouslySetInnerHTML={{__html: `window.__data=${serialize(store.getState())};`}} charSet="UTF-8"/>
             <script src={assets.javascript.main} charSet="UTF-8"/>
           </body>

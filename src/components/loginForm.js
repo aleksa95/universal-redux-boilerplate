@@ -28,7 +28,8 @@ let LoginForm = ({ handleSubmit, pristine, submitting, invalid, facebookLogin })
       <Link to="/forgot-password">Forgot password?</Link>
     </div>
     <button type="submit" disabled={pristine || submitting || invalid}>Submit</button>
-    <button type="button" onClick={ facebookLogin }>Facebook</button>
+
+    <a href="http://localhost:3000/api/auth/facebook"><button type="button">Facebook</button></a>
   </form>
 );
 
