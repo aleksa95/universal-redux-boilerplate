@@ -12,13 +12,17 @@ let LoginForm = ({ handleSubmit, pristine, submitting, invalid, facebookLogin })
   <form className={classNames(LGFStyles['authentication-form'], 'login-form')} onSubmit={handleSubmit}>
 
     <a className={LGFStyles['social-media-auth-link']} href="http://localhost:3000/api/auth/facebook">
-      <i className={classNames(LGFStyles['facebook-logo'], LGFIcons.fa, LGFIcons['fa-facebook'])}></i>
-      <button className={LGFStyles['facebook-button']} type="button">Login with Facebook</button>
+      <button className={LGFStyles['facebook-button']} type="button">
+        <i className={classNames(LGFStyles['facebook-logo'], LGFIcons.fa, LGFIcons['fa-facebook'])}></i>
+        Login with Facebook
+      </button>
     </a>
 
     <a className={LGFStyles['social-media-auth-link']} href="http://localhost:3000/api/auth/twitter">
-      <i className={classNames(LGFStyles['twitter-logo'], LGFIcons.fa, LGFIcons['fa-twitter'])}></i>
-      <button className={LGFStyles['twitter-button']} type="button">Login with Twitter</button>
+      <button className={LGFStyles['twitter-button']} type="button">
+        <i className={classNames(LGFStyles['twitter-logo'], LGFIcons.fa, LGFIcons['fa-twitter'])}></i>
+        Login with Twitter
+      </button>
     </a>
 
     <div className={LGFStyles['auth-separator']}>OR</div>

@@ -11,13 +11,17 @@ let SignUpForm = ({ handleSubmit, pristine, submitting, invalid }) => ( // eslin
   <form className={styles['authentication-form']} onSubmit={handleSubmit}>
 
     <a className={styles['social-media-auth-link']} href="http://localhost:3000/api/auth/facebook">
-      <i className={classNames(styles['facebook-logo'], icons.fa, icons['fa-facebook'])}></i>
-      <button className={styles['facebook-button']} type="button">Sign up with Facebook</button>
+      <button className={styles['facebook-button']} type="button">
+        <i className={classNames(styles['facebook-logo'], icons.fa, icons['fa-facebook'])}></i>
+        Sign up with Facebook
+      </button>
     </a>
 
     <a className={styles['social-media-auth-link']} href="http://localhost:3000/api/auth/twitter">
-      <i className={classNames(styles['twitter-logo'], icons.fa, icons['fa-twitter'])}></i>
-      <button className={styles['twitter-button']} type="button">Sign up with Twitter</button>
+      <button className={styles['twitter-button']} type="button">
+        <i className={classNames(styles['twitter-logo'], icons.fa, icons['fa-twitter'])}></i>
+        Sign up with Twitter
+      </button>
     </a>
 
     <div className={styles['auth-separator']}>OR</div>

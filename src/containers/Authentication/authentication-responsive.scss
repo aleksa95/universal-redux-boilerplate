@@ -1,0 +1,9 @@
+@media screen and (max-width: 350px) {
+  .authentication-wrapper {
+    .authentication-form .social-media-auth-link {
+      .facebook-logo, .twitter-logo {
+        display: none;
+      }
+    }
+  }
+}

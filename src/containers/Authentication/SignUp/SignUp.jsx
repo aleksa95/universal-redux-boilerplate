@@ -6,9 +6,9 @@ import { signUpUser } from '../../../actions/auth/authActionCreators';
 const SGUStyles = require('../_authentication.scss');
 
 const SignUp = ({ signUpUser, signUpError, error }) => (
-  <div className={SGUStyles['authentication-wrapper']}>
+  <div>
     { !signUpError &&
-    <div>
+    <div className={SGUStyles['authentication-wrapper']}>
       <div className={SGUStyles['authentication-title']}>Sign up</div>
       <SignUpForm onSubmit={ signUpUser } />
     </div> }

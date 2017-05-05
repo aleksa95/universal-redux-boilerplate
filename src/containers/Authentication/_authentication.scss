@@ -5,8 +5,10 @@
 $authentication-title-font-size: $font-size-giant;
 $authentication-title-margin: 40px 0 10px 0;
 $authentication-error-wrapper-margin: 60px 0 0 0;
-$authentication-form-min-width: 320px;
-$authentication-form-max-width: 320px;
+$authentication-form-width: 100%;
+$authentication-form-max-width: 360px;
+$authentication-form-min-width: 300px;
+$authentication-form-padding: 0 20px;
 $login-form-button-margin-top: 30px;
 $authentication-form-input-padding: 10px 0 10px 5px;
 $authentication-form-input-margin-top: 25px;
@@ -37,8 +39,9 @@ $authentication-form-separator-margin-top: 25px;
   }
 
   .authentication-form {
-    min-width: $authentication-form-min-width;
+    width: $authentication-form-width;
     max-width: $authentication-form-max-width;
+    padding: $authentication-form-padding;
 
     &.login-form {
       button {
@@ -79,7 +82,6 @@ $authentication-form-separator-margin-top: 25px;
     }
 
     .social-media-auth-link {
-      position: relative;
 
       .facebook-logo, .twitter-logo {
         position: absolute;
@@ -87,14 +89,14 @@ $authentication-form-separator-margin-top: 25px;
       }
 
       .facebook-logo {
-        top: -11px;
+        top: 5px;
         left: 50px;
         font-size: 45px;
       }
 
       .twitter-logo {
-        top: 52px;
-        right: 238px;
+        top: 5px;
+        left: 45px;
         font-size: 37px;
       }
     }
@@ -103,6 +105,7 @@ $authentication-form-separator-margin-top: 25px;
       @include authentication-form-button;
 
       &.facebook-button {
+        position: relative;
         border: none;
         background: $facebook-blue;
         color: white;
@@ -112,6 +115,7 @@ $authentication-form-separator-margin-top: 25px;
       }
 
       &.twitter-button {
+        position: relative;
         border: none;
         background: $twitter-blue;
         color: white;
