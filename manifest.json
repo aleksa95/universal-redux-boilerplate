@@ -1,0 +1,26 @@
+{
+  "short_name": "URPD",
+  "name": "Universal progressive redux boilerplate",
+  "icons": [{
+    "src": "/manifest-icons/test-icon-48x48.png",
+    "type": "image/png",
+    "sizes": "48x48"
+  }, {
+    "src": "/manifest-icons/test-icon-96x96.png",
+    "type": "image/png",
+    "sizes": "96x96"
+  }, {
+    "src": "/manifest-icons/test-icon-144x144.png",
+    "type": "image/png",
+    "sizes": "144x144"
+  }, {
+    "src": "/manifest-icons/test-icon-192x192.png",
+    "type": "image/png",
+    "sizes": "192x192"
+  }],
+  "start_url": "/",
+  "background_color": "#2196F3",
+  "theme_color": "#2196F3",
+  "display": "standalone",
+  "orientation": "portrait"
+}

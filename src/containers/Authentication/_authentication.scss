@@ -103,6 +103,7 @@ $authentication-form-separator-margin-top: 25px;
 
     button {
       @include authentication-form-button;
+      overflow: hidden;
 
       &.facebook-button {
         position: relative;

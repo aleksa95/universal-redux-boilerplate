@@ -1,5 +1,16 @@
+$authentication-title-responsive-margin: 20px 0 0 0;
+$authentication-submit-button-responsive-margin-bottom: 50px;
+
 @media screen and (max-width: 350px) {
   .authentication-wrapper {
+    .authentication-title {
+      margin: $authentication-title-responsive-margin;
+    }
+
+    button[type="submit"] {
+      margin-bottom: $authentication-submit-button-responsive-margin-bottom;
+    }
+
     .authentication-form .social-media-auth-link {
       .facebook-logo, .twitter-logo {
         display: none;

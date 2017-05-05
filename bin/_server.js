@@ -18,6 +18,8 @@ import {port, apiHost, apiPort} from '../config/env';
 
 global.__CLIENT__ = false; // eslint-disable-line
 
+const manifestPath = path.join(__dirname, '..', 'manifest.json');
+
 const pretty = new PrettyError();
 pretty.start();
 
@@ -36,6 +38,10 @@ app.use('/api', (req, res) => {
 app.use(favicon(path.join(__dirname, '..', 'favicon.ico')));
 
 app.use('/', express.static(path.resolve(__dirname, '../public')));
+
+app.use('/manifest.json', (req, res) => res.sendFile(manifestPath));
+
+app.use('/manifest-icons', express.static(path.resolve(__dirname, '../manifest-icons')));
 
 server.on('upgrade', (req, socket, head) => {
   proxy.ws(req, socket, head);
