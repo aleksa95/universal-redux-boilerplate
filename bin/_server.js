@@ -13,6 +13,7 @@ import {Provider} from 'react-redux';
 import {createStore as _createStore} from '../src/redux/createStore';
 import getRoutes from '../src/routes';
 import Default from '../src/layouts/Default';
+import favicon from 'serve-favicon';
 import {port, apiHost, apiPort} from '../config/env';
 
 global.__CLIENT__ = false; // eslint-disable-line
@@ -31,6 +32,8 @@ const proxy = httpProxy.createProxyServer({
 app.use('/api', (req, res) => {
   proxy.web(req, res, {target: targetUrl});
 });
+
+app.use(favicon(path.join(__dirname, '..', 'favicon.ico')));
 
 app.use('/', express.static(path.resolve(__dirname, '../public')));
 

@@ -6,9 +6,23 @@ import classNames from 'classnames';
 import { authFormsValidator } from '../actions/auth/authActionCreators';
 
 const LGFStyles = require('../containers/Authentication/_authentication.scss');
+const LGFIcons = require('../styles/font-awesome.scss');
 
 let LoginForm = ({ handleSubmit, pristine, submitting, invalid, facebookLogin }) => ( // eslint-disable-line
   <form className={classNames(LGFStyles['authentication-form'], 'login-form')} onSubmit={handleSubmit}>
+
+    <a className={LGFStyles['social-media-auth-link']} href="http://localhost:3000/api/auth/facebook">
+      <i className={classNames(LGFStyles['facebook-logo'], LGFIcons.fa, LGFIcons['fa-facebook'])}></i>
+      <button className={LGFStyles['facebook-button']} type="button">Login with Facebook</button>
+    </a>
+
+    <a className={LGFStyles['social-media-auth-link']} href="http://localhost:3000/api/auth/twitter">
+      <i className={classNames(LGFStyles['twitter-logo'], LGFIcons.fa, LGFIcons['fa-twitter'])}></i>
+      <button className={LGFStyles['twitter-button']} type="button">Login with Twitter</button>
+    </a>
+
+    <div className={LGFStyles['auth-separator']}>OR</div>
+
     <Field name="email" component={formGroup} placeholder="Email" type="text"
            wrapperClassName={LGFStyles['authentication-form-input-group']}
            inputClassName={LGFStyles['authentication-form-input']}
@@ -28,9 +42,6 @@ let LoginForm = ({ handleSubmit, pristine, submitting, invalid, facebookLogin })
       <Link to="/forgot-password">Forgot password?</Link>
     </div>
     <button type="submit" disabled={pristine || submitting || invalid}>Submit</button>
-
-    <a href="http://localhost:3000/api/auth/facebook"><button type="button">Facebook</button></a>
-    <a href="http://localhost:3000/api/auth/twitter"><button type="button">Twitter</button></a>
   </form>
 );
 

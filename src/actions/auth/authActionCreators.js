@@ -114,7 +114,6 @@ function signUpUser({ email, password }) {
         errorHandler(dispatch, error.response, AUTH_ACTIONS.SIGN_UP_TO_MUCH_ATTEMPTS);
 
         setTimeout(() => {
-          console.log('a');
           dispatch({ type: AUTH_ACTIONS.DISMISS_SIGN_UP_ERROR});
         }, 15000);
       } else {
@@ -154,7 +153,7 @@ function checkAuth() {
     } else {
       dispatch({
         type: AUTH_ACTIONS.AUTHENTICATION_FAILED,
-        payload: { error: 'User not authenticated' }
+        payload: 'User not authenticated'
       });
     }
 

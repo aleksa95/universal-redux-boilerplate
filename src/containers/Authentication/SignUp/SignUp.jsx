@@ -9,7 +9,7 @@ const SignUp = ({ signUpUser, signUpError, error }) => (
   <div className={SGUStyles['authentication-wrapper']}>
     { !signUpError &&
     <div>
-      <div className={SGUStyles['authentication-title']}>Sign Up Page</div>
+      <div className={SGUStyles['authentication-title']}>Sign up</div>
       <SignUpForm onSubmit={ signUpUser } />
     </div> }
 
