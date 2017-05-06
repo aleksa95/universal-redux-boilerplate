@@ -11,7 +11,7 @@ export default class Default extends Component {
       return (
           <html lang="en">
           <head>
-              <title>Title</title>
+              <title>Universal Redux Boilerplate</title>
               <meta name="viewport" content="width=device-width, initial-scale=1.0" id="viewport-element"/>
               <meta name="theme-color" content="#2196F3" />
               <link rel="shortcut icon" href="/favicon.ico" />
@@ -24,12 +24,11 @@ export default class Default extends Component {
           </head>
           <body>
             <div id="root" dangerouslySetInnerHTML={{ __html: content }} />
-            <script
+            <script rel="preload" as="script"
               // removes hashes from facebook login/sign-up callback
-              dangerouslySetInnerHTML={{ __html: `if (window.location.hash == "#_=_") {window.location.hash = ""; window.location = window.location.href.split('#')[0];}`}}
-            />
-            <script dangerouslySetInnerHTML={{__html: `window.__data=${serialize(store.getState())};`}} charSet="UTF-8"/>
-            <script src={assets.javascript.main} charSet="UTF-8"/>
+              dangerouslySetInnerHTML={{ __html: `if (window.location.hash == "#_=_") {window.location.hash = ""; window.location = window.location.href.split('#')[0];}`}}/>
+            <script rel="preload" as="script" dangerouslySetInnerHTML={{__html: `window.__data=${serialize(store.getState())};`}} charSet="UTF-8"/>
+            <script rel="preload" as="script" src={assets.javascript.main} charSet="UTF-8"/>
           </body>
           </html>
       );
