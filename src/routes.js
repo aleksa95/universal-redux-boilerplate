@@ -1,25 +1,17 @@
 /* eslint react/jsx-filename-extension: 0 */
 import React from 'react';
-import cookie from 'react-cookie';
 import { IndexRoute, Route } from 'react-router';
-import { App, Homepage, NotFound, Login, SignUp, Dashboard, EnsureAuthentication } from './containers';
-import { checkAuth as _checkAuth } from './actions/auth-actions';
+import { App, Homepage, NotFound, AboutUs, Projects, Careers, Contact } from './containers';
 
-export default (store) => { // eslint-disable-line
-
-  function checkAuth() {
-    return store.dispatch(_checkAuth(cookie.load('token'))); // eslint-disable-line
-  }
+export default stores => { // eslint-disable-line
 
   return (
-    <Route path="/" onEnter={checkAuth} component={App}>
+    <Route path="/" component={App}>
       <IndexRoute component={Homepage} />
-      <Route path="sign-up" component={SignUp} />
-      <Route path="login" component={Login} />
-
-      <Route component={EnsureAuthentication}>
-        <Route path="/dashboard" component={Dashboard} />
-      </Route>
+      <Route path="about-us" component={AboutUs} />
+      <Route path="projects" component={Projects} />
+      <Route path="careers" component={Careers} />
+      <Route path="contact" component={Contact} />
 
       <Route path="*" component={NotFound} status={404} />
     </Route>

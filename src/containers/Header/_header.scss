@@ -6,13 +6,14 @@
   justify-content: space-between;
   padding: 0 30px;
 
+  .links-wrapper {
 
-  .sign-up-link {
-    margin-left: 35px;
-  }
-
-  a, .sign-out-btn {
-    cursor: pointer;
+    a {
+      margin-right: 10px;
+      
+      &:hover {
+        color: lighten(black, 60);
+      }
+    }
   }
 }
-
