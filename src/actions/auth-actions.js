@@ -151,11 +151,11 @@ function checkAuth(token) {
  * @param route
  * @returns {function(*, *)}
  */
-function redirect(route) {
-  return function(dispatch) {
+const redirect = route => {
+  return dispatch => {
     dispatch(push(route));
   };
-}
+};
 
 /**
  * Checks if Auth form fields are valid

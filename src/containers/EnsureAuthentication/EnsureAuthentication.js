@@ -1,6 +1,7 @@
-import React, { Component, PropTypes } from 'react'; // eslint-disable-line no-unused-vars
+import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 import { redirect } from '../../actions/auth-actions';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class EnsureAuthentication extends Component {
   componentWillMount() {

@@ -1,6 +1,7 @@
 /* eslint react/prefer-stateless-function: 0 */
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class Dashboard extends Component {
   render() {

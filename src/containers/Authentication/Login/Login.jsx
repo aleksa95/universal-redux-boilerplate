@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import LoginForm from '../../../components/loginForm';
 import { loginUser } from '../../../actions/auth-actions';
+import PropTypes from 'prop-types';
 
 class Login extends React.Component {
   submit(values) {
@@ -21,7 +22,7 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  loginUser: React.PropTypes.func,
+  loginUser: PropTypes.func,
 };
 
 export default connect(null, { loginUser })(Login);

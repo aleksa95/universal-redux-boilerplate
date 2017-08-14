@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SignUpForm from '../../../components/loginForm';
 import { signUpUser } from '../../../actions/auth-actions';
@@ -21,7 +22,7 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
-  signUpUser: React.PropTypes.func,
+  signUpUser: PropTypes.func,
 };
 
 export default connect(null, { signUpUser })(SignUp);

@@ -1,7 +1,8 @@
 /* eslint react/prefer-stateless-function: 0, react/no-danger: 0, react/forbid-prop-types: 0 */
-import React, {Component, PropTypes} from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom/server';
 import serialize from 'serialize-javascript';
+import PropTypes from 'prop-types';
 
 export default class Default extends Component {
   render() {
@@ -28,7 +29,7 @@ export default class Default extends Component {
 }
 
 Default.propTypes = {
-    assets: React.PropTypes.object,
-    component: React.PropTypes.node,
-    store: React.PropTypes.object,
+    assets: PropTypes.object,
+    component: PropTypes.node,
+    store: PropTypes.object,
 };

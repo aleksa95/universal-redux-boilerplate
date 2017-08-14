@@ -1,7 +1,8 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { logoutUser } from '../../actions/auth-actions';
+import PropTypes from 'prop-types';
 
 class Header extends Component {
 
