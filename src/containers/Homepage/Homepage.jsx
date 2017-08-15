@@ -7,7 +7,7 @@ export default class Homepage extends React.Component {
     return (
       <div className={ styles.homepage }>
         <div className={ styles['homepage-header'] }>
-          <h1>Homepage</h1>
+            <img src={ require('../../images/decenter.png')}/>
         </div>
       </div>
     );
