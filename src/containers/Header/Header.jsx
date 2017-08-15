@@ -8,7 +8,7 @@ class Header extends Component {
     return (
       <header className={ styles.header }>
         <div className={ styles['links-wrapper'] }>
-          <Link to="/">Logo</Link>
+          <Link to="/">Home</Link>
           <Link to="/projects">Projects</Link>
           <Link to="/about-us">About Us</Link>
           <Link to="/careers">Careers</Link>
