@@ -61,7 +61,7 @@
     "http-proxy": "^1.16.2",
     "jsonwebtoken": "^7.3.0",
     "lodash": "^4.17.4",
-    "mongoose": "^4.8.5",
+    "mongoose": "^5.9.2",
     "morgan": "^1.8.1",
     "node-sass": "^4.5.0",
     "passport": "^0.3.2",
